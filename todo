@@ -1,0 +1,45 @@
+Funzionalita':
+
+- Registrazione :
+    [X] Controllo pre-esistenza username
+    [X] Controllo correttezza password
+    [X] Aggiunta utente alla lista utenti
+    [X]  Catch eventuali errori di immissione testo e annessa gestione
+
+- Login :
+    [X] Controllo esistenza username nella lista utenti registrati
+    [X] Controllo correttezza password e in caso di mismatching ritorno SOLO informazione sul mismatching non il motivo per evitare di dare informazioni sul contenuto del database
+    [X] Setto il login dell'utente a true e lato client setto il client con il suo nome utente
+    [X] Abilito funzioni da utente loggato
+    [X] Catch eventuali errori di immissione testo e annessa gestione
+
+- Logout :
+    [X] Setto login a false ed impedisco azioni da utente loggato
+    [X] Catch eventuali errori di immissione testo e annessa gestione
+
+- Creazione Asta :
+    [X] Crea lotto e immissione data chiusura desiderata, creazione del timer relativo all'inserzione
+    [] Gestione eventuale formattazione errata nell'inserimento della data
+    [X] Inserimento nella lista delle inserzioni aperte
+    [X] Chiusura automatica e settagggio eventuale vincitore dell'asta
+    [] Catch eventuali errori di immissione testo e annessa gestione
+
+- Offerta Asta :
+    [X] User crea offerta su asta in base all'id
+    [X] Asta controlla che l'offerta sia valida
+    [X] Asta aggiunge o respinge offerta
+
+-ALTRI :
+
+    [X] Gestione connessione client server quando client on e server off pre avvio
+    [] Gestione improvvisa server off mentre client in esecuzione
+    [] Usare Pattern Observer per notificare l'aggiunta di un'offerta
+    [] ThreadPool quando il numero delle aste cresce per gestirne apertura e chiusura
+    [X] Lettura da file per popolamento del sistema, con reset del timer in caso crash del sistema
+    [] GUI Client
+    [X] Gestione concorrenze nella creazione dell'asta e nell'immissione delle offerte
+    [X] Salvataggio id Aste
+    [] Logger per Server
+
+
+N.B = Ogni volta che si desidera testare il programma e' necessario settare lato server l' IPLOCAL andando a cercare l'indirizzo IP Locale (IPV4) su cui e' esposto il registro (per farlo aprire cmd e nel prompt digitare ipconfig), fare la stessa cosa lato client affinche si accoppino correttamente. DISABILITARE IL FIREWALL O APRIRE LE CONNESSIONI SULLA PORTA 1099

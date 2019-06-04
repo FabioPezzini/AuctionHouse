@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="450.0" prefWidth="630.0" style="-fx-background-color: #81c784;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.Controller.LoginDataController">
+   <children>
+      <ImageView fitHeight="216.0" fitWidth="342.0" layoutY="106.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../resources/Images/Destrauction.png" />
+         </image>
+      </ImageView>
+      <AnchorPane layoutX="342.0" layoutY="58.0" prefHeight="334.0" prefWidth="259.0" style="-fx-background-color: #66bb6a;">
+         <children>
+            <JFXTextField fx:id="username" layoutX="32.0" layoutY="106.0" prefHeight="31.0" prefWidth="196.0" promptText="Username" />
+            <JFXPasswordField fx:id="password" layoutX="32.0" layoutY="174.0" prefHeight="31.0" prefWidth="196.0" promptText="Password" />
+            <JFXButton fx:id="signIn" layoutX="68.0" layoutY="239.0" onAction="#handleSignIn" prefHeight="31.0" prefWidth="123.0" style="-fx-background-radius: 100; -fx-background-color: #c8e6c9;" text="Sign in" />
+            <Label layoutX="98.0" layoutY="31.0" text="Sign In" textFill="WHITE">
+               <font>
+                  <Font size="21.0" />
+               </font>
+            </Label>
+            <Hyperlink layoutX="79.0" layoutY="297.0" text="Forgot Password?" />
+         </children>
+         <effect>
+            <DropShadow />
+         </effect>
+      </AnchorPane>
+      <JFXButton fx:id="signUp" layoutX="129.0" layoutY="296.0" onAction="#changeSceneSignUp" prefHeight="31.0" prefWidth="123.0" style="-fx-background-radius: 100; -fx-background-color: #c8e6c9;" text="SIGN UP" />
+   </children>
+</AnchorPane>

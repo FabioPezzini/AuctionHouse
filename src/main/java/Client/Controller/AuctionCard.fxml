@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="350.0" style="-fx-background-color: #66bb6a;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.Controller.AuctionCardController">
+      <effect>
+          <DropShadow />
+      </effect>
+   <children>
+      <Label fx:id="timer" layoutX="128.0" layoutY="378.0" text="Label" />
+      <ImageView fx:id="auctionImage" fitHeight="226.0" fitWidth="268.0" layoutX="37.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="auctionName" layoutX="141.0" layoutY="9.0" text="Label">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
+      <Label layoutX="33.0" layoutY="284.0" text="Vendor" />
+      <Label layoutX="14.0" layoutY="313.0" text="Actual Winner:" />
+      <Label fx:id="vendor" layoutX="128.0" layoutY="284.0" text="Label" />
+      <Label fx:id="bidderHigher" layoutX="128.0" layoutY="313.0" text="Label" />
+      <Label layoutX="201.0" layoutY="313.0" text="Offer:" />
+      <Label fx:id="higherOffer" layoutX="268.0" layoutY="313.0" text="Label" />
+      <Label layoutX="22.0" layoutY="348.0" text="Close Date:" />
+      <Label fx:id="closeDate" layoutX="128.0" layoutY="348.0" text="Label" />
+      <JFXButton fx:id="offerButton" layoutX="279.0" layoutY="374.0" onAction="#makeAnOffer" text="MAKE BID" />
+      <FontAwesomeIconView glyphName="ANGLE_LEFT" layoutX="19.0" layoutY="36.0" onMouseClicked="#backToLoginScreen" size="26" />
+      <FontAwesomeIconView fx:id="star" layoutX="305.0" layoutY="33.0" onMouseClicked="#addRemoveToFavourite" size="17" />
+   </children>
+</AnchorPane>
