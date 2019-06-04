@@ -191,8 +191,8 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
         return LocalDateTime.now();
     }
 
-    public void saveAuctionImage(File image) throws RemoteException {
-
+    public synchronized void saveAuctionImage(File image) throws RemoteException {
+        auctionIdCounter = db.idOfAuction();
         String pathSave = "src\\main\\java\\Server\\services\\AuctionImages\\" + auctionIdCounter + ".png";
 
         try {
@@ -214,6 +214,10 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
 
     public ArrayList<Auction> takeAuctionList() {
         return db.AuctionList();
+    }
+
+    public ArrayList<Auction> searchAuctionList(String textToSearch) {
+        return db.searchAuctionList(textToSearch);
     }
 
     public Auction getAuction(int id) { return db.getAuction(id);}

@@ -4,6 +4,7 @@ import Client.Domain.ClientManager;
 
 import animatefx.animation.FadeIn;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
@@ -32,10 +33,17 @@ public class HomeController {
     @FXML
     private AnchorPane auctionList;
 
-    @FXML AnchorPane windowsPane;
+    @FXML
+    private AnchorPane windowsPane;
 
     @FXML
     private JFXButton createAu;
+
+    @FXML
+    private JFXButton search;
+
+    @FXML
+    private JFXTextField searchText;
 
 
     @FXML
@@ -69,6 +77,16 @@ public class HomeController {
         ((AuctionListController)fxml.getController()).refreshList();
     }
 
+    @FXML
+    public void searchAuction() {
+        if(searchText == null) {
+            reloadLatestAuction();
+        }
+        else {
+            String text = searchText.getText();
+            ((AuctionListController)fxml.getController()).searchList(text);
+        }
+    }
 
 
 

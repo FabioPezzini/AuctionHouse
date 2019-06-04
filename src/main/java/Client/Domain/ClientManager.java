@@ -266,6 +266,10 @@ public class ClientManager {
         return ad.takeAuctionList();
     }
 
+    public ArrayList<Auction> searchAuction(String toSearch) throws RemoteException {
+        return ad.searchAuctionList(toSearch);
+    }
+
     public ArrayList<Auction> requestFavoriteAuction() throws RemoteException {
         return ad.favoriteAuction(loggedUser);
     }

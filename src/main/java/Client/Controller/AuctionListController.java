@@ -44,14 +44,23 @@ public class AuctionListController {
 
 
 
-    public void initializeList() {
+    public void initializeList(Boolean typeOfSearch, String toSearch) {
         Alist = null;
         auction.clear();
         //Richiedo al server una lista di 10 aste al massimo, successivamente posso chiedere di prenderne altre 10
-        try {
-            Alist = client.requestListAuction();
-        }catch (RemoteException e) {
-            e.printStackTrace();
+        if(typeOfSearch) {
+            try {
+                Alist = client.requestListAuction();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            try {
+                Alist = client.searchAuction(toSearch);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
         if(Alist != null) {
             for (int i = 0; i < Alist.size(); i++) {
@@ -117,7 +126,12 @@ public class AuctionListController {
 
     public void refreshList() {
         //Per un bug visuale se non ricarico la Lista andando ad aggiornare solo l'observable list si buggano le immagini, probabilmente visto che uso una custom list cell
-        initializeList();
+        initializeList(true,null);
+    }
+
+    public void searchList(String toSearch) {
+        //Usato per cercare
+        initializeList(false,toSearch);
     }
 
     @FXML
@@ -145,7 +159,7 @@ public class AuctionListController {
 
     public void setClient(ClientManager client) {
         this.client = client;
-        initializeList();
+        refreshList(); //In questo caso inizializzo
     }
 
     public Stage getPrimaryStage() { return primaryStage; }
