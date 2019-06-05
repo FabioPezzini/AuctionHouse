@@ -33,6 +33,8 @@ public class LoginDataController {
     @FXML
     private JFXButton signUp;
 
+    private HomeController homeController;
+
 
     @FXML
     private void handleSignIn() throws RemoteException, IOException {
@@ -52,8 +54,10 @@ public class LoginDataController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/Client/Controller/Home.fxml"));
             Parent root = (Parent) loader.load();
 
-            ((HomeController)loader.getController()).setPrimaryStage(primaryStage);
-            ((HomeController)loader.getController()).setClient(client);
+            homeController = (HomeController)loader.getController();
+            homeController.setPrimaryStage(primaryStage);
+            homeController.setClient(client);
+            homeController.setHomeController(homeController);
 
             primaryStage.setScene(new Scene(root));
 

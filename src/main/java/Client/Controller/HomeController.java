@@ -2,6 +2,7 @@ package Client.Controller;
 
 import Client.Domain.ClientManager;
 
+import Server.Domain.Auction;
 import animatefx.animation.FadeIn;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
@@ -44,6 +45,12 @@ public class HomeController {
 
     @FXML
     private JFXTextField searchText;
+
+    private TitleController titleController;
+
+    private AuctionListController auctionListController;
+
+    private HomeController homeController;
 
 
     @FXML
@@ -97,9 +104,11 @@ public class HomeController {
 
     public void setClient(ClientManager client) {
         this.client = client;
-        initializeHeader();
         initializeAuctionList();
+        initializeHeader();
     }
+
+
 
     public Stage getPrimaryStage() { return primaryStage; }
 
@@ -115,9 +124,11 @@ public class HomeController {
             e.printStackTrace();
         }
         header.getChildren().setAll(root);
+        titleController = (TitleController) fxml.getController();
 
-        ((TitleController)fxml.getController()).setPrimaryStage(primaryStage);
-        ((TitleController)fxml.getController()).setClient(client);
+        titleController.setPrimaryStage(primaryStage);
+        titleController.setClient(client);
+        titleController.setAuctionListController(auctionListController);
     }
 
     private void initializeAuctionList() {
@@ -133,13 +144,34 @@ public class HomeController {
         }
         auctionList.getChildren().setAll(root);
 
-        ((AuctionListController)fxml.getController()).setPrimaryStage(primaryStage);
-        ((AuctionListController)fxml.getController()).setClient(client);
+        auctionListController = (AuctionListController) fxml.getController();
+
+        auctionListController.setPrimaryStage(primaryStage);
+        auctionListController.setClient(client);
+        auctionListController.setAuctionListController(auctionListController);
     }
 
+    public TitleController getTitleController() {
+        return titleController;
+    }
 
+    public void setTitleController(TitleController titleController) {
+        this.titleController = titleController;
+    }
 
+    public AuctionListController getAuctionListController() {
+        return auctionListController;
+    }
 
+    public void setAuctionListController(AuctionListController auctionListController) {
+        this.auctionListController = auctionListController;
+    }
 
+    public HomeController getHomeController() {
+        return homeController;
+    }
 
+    public void setHomeController(HomeController homeController) {
+        this.homeController = homeController;
+    }
 }

@@ -4,6 +4,7 @@ import Client.Domain.ClientManager;
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
@@ -26,7 +27,9 @@ public class TitleController {
     private JFXButton myAuction;
 
     @FXML
-    private JFXButton inventory;
+    private JFXButton favoriteButton;
+
+    private AuctionListController auctionListController;
 
     @FXML
     private void handleLogout(){
@@ -57,11 +60,13 @@ public class TitleController {
     @FXML
     private void viewFavorites() {
         try {
-            System.out.println(client.requestFavoriteAuction().get(0).getId()); //OK FINO A QUI FUNZIONA, RITORNA LA GIUSTA LISTA D'OGGETTI, ORA BISOGNA VISUALIZZARLA
+            favoriteButton.setVisible(false);
+            auctionListController.loadFavorite();
+            //System.out.println(client.requestFavoriteAuction().get(0).getId()); //OK FINO A QUI FUNZIONA, RITORNA LA GIUSTA LISTA D'OGGETTI, ORA BISOGNA VISUALIZZARLA
         }catch (Exception e) {
             e.printStackTrace();
         }
-            //DA FARE
+
 
     }
 
@@ -75,5 +80,13 @@ public class TitleController {
 
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
+    }
+
+    public AuctionListController getAuctionListController() {
+        return auctionListController;
+    }
+
+    public void setAuctionListController(AuctionListController auctionListController) {
+        this.auctionListController = auctionListController;
     }
 }

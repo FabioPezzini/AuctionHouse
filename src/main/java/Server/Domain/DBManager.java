@@ -508,9 +508,8 @@ public class DBManager {
         return false;
     }
 
-    public synchronized void updateHigherOffer(int id) {
 
-    }
+
 
 
     public DBManager(SystemManager sys) {

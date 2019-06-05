@@ -30,6 +30,7 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class AuctionListController {
@@ -42,22 +43,31 @@ public class AuctionListController {
 
     private final ObservableList<Auction> auction = FXCollections.observableArrayList();
 
+    private AuctionListController auctionListController;
 
 
-    public void initializeList(Boolean typeOfSearch, String toSearch) {
+
+    public void initializeList(int typeOfSearch, String toSearch) {
         Alist = null;
         auction.clear();
         //Richiedo al server una lista di 10 aste al massimo, successivamente posso chiedere di prenderne altre 10
-        if(typeOfSearch) {
+        if(typeOfSearch == 0) {
             try {
                 Alist = client.requestListAuction();
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         }
-        else {
+        else if (typeOfSearch == 1) {
             try {
                 Alist = client.searchAuction(toSearch);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        else if (typeOfSearch == 2) {
+            try {
+                Alist = client.requestFavoriteAuction();
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -124,14 +134,21 @@ public class AuctionListController {
     }
 
 
+
     public void refreshList() {
         //Per un bug visuale se non ricarico la Lista andando ad aggiornare solo l'observable list si buggano le immagini, probabilmente visto che uso una custom list cell
-        initializeList(true,null);
+        initializeList(0,null);
     }
+
 
     public void searchList(String toSearch) {
         //Usato per cercare
-        initializeList(false,toSearch);
+        initializeList(1,toSearch);
+    }
+
+    public void loadFavorite() {
+        //Per un bug visuale se non ricarico la Lista andando ad aggiornare solo l'observable list si buggano le immagini, probabilmente visto che uso una custom list cell
+        initializeList(2,null);
     }
 
     @FXML
@@ -162,7 +179,19 @@ public class AuctionListController {
         refreshList(); //In questo caso inizializzo
     }
 
+    public void setC(ClientManager client) {
+        this.client = client;
+    }
+
     public Stage getPrimaryStage() { return primaryStage; }
 
     public void setPrimaryStage(Stage primaryStage) { this.primaryStage = primaryStage; }
+
+    public AuctionListController getAuctionListController() {
+        return auctionListController;
+    }
+
+    public void setAuctionListController(AuctionListController auctionListController) {
+        this.auctionListController = auctionListController;
+    }
 }
