@@ -81,7 +81,9 @@ public class HomeController {
 
     @FXML
     public void reloadLatestAuction() {
-        ((AuctionListController)fxml.getController()).refreshList();
+
+        auctionListController.refreshList();
+        titleController.setVisibleButtons();
     }
 
     @FXML
@@ -91,7 +93,8 @@ public class HomeController {
         }
         else {
             String text = searchText.getText();
-            ((AuctionListController)fxml.getController()).searchList(text);
+
+            auctionListController.searchList(text);
         }
     }
 
@@ -124,6 +127,7 @@ public class HomeController {
             e.printStackTrace();
         }
         header.getChildren().setAll(root);
+
         titleController = (TitleController) fxml.getController();
 
         titleController.setPrimaryStage(primaryStage);

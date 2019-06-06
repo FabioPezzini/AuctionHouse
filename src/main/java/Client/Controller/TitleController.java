@@ -62,13 +62,30 @@ public class TitleController {
         try {
             favoriteButton.setVisible(false);
             auctionListController.loadFavorite();
-            //System.out.println(client.requestFavoriteAuction().get(0).getId()); //OK FINO A QUI FUNZIONA, RITORNA LA GIUSTA LISTA D'OGGETTI, ORA BISOGNA VISUALIZZARLA
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void myAuction () {
+        try {
+            myAuction.setVisible(false);
+            auctionListController.loadFavorite();
+
         }catch (Exception e) {
             e.printStackTrace();
         }
 
-
     }
+
+    public void setVisibleButtons() {
+        favoriteButton.setVisible(true);
+        userSection.setVisible(true);
+        myAuction.setVisible(true);
+    }
+
 
     public ClientManager getClient() { return client; }
 

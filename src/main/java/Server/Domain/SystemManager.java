@@ -13,6 +13,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class SystemManager extends UnicastRemoteObject implements Proxy {
 
@@ -20,7 +22,7 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
     private ConcurrentHashMap<Integer,Auction> auctionList;
     private HashMap<Integer,Auction> closedAuction;
     private HashMap<LifeCycleAuctionTask, Long> timerTasks;
-    private HashMap<LifeCycleAuctionTaskDB, Long> timerTasksDB;
+    private ArrayList<LifeCycleAuctionTaskDB> timerTasksDB;
     private int auctionIdCounter = 1; //Valido per FileManager, il valore non e' salvato
     private transient Timer timer;
     private FileManager files;
@@ -113,11 +115,13 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
         int auctionId = db.idOfAuction();
         ZonedDateTime zdt = closingTime.atZone(ZoneId.of("Europe/Rome"));
         long millis = zdt.toInstant().toEpochMilli();
-        LifeCycleAuctionTaskDB t = new LifeCycleAuctionTaskDB(auctionId,millis);
+        LifeCycleAuctionTaskDB t = new LifeCycleAuctionTaskDB(db.getAuction(auctionId),millis);
         t.passArgument(timerTasksDB,db);
         timer.schedule(t, (millis - System.currentTimeMillis()));
-        timerTasksDB.put(t, millis );
+        timerTasksDB.add(t);
     }
+
+
 
 
 
@@ -191,7 +195,7 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
         return LocalDateTime.now();
     }
 
-    public synchronized void saveAuctionImage(File image) throws RemoteException {
+    public synchronized void saveAuctionImage(File image) {
         auctionIdCounter = db.idOfAuction();
         String pathSave = "src\\main\\java\\Server\\services\\AuctionImages\\" + auctionIdCounter + ".png";
 
@@ -202,6 +206,32 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
         }catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void saveTimerStats() {
+        db.saveTimer(this.timerTasksDB);
+
+    }
+
+    public void refreshTimerStats() {
+        timerTasksDB = (ArrayList<LifeCycleAuctionTaskDB>)db.reloadTimer();
+
+
+            Timer timer = new Timer();
+
+            for (LifeCycleAuctionTaskDB timerT : timerTasksDB) {
+                // Reschedule task to initial value subtracted how much has already elapsed
+                timerT.passArgument(timerTasksDB,db);
+                long timeLeft = timerT.getTimeLeft();
+                if(timeLeft < 0) {
+                   timerT.run();
+                }
+                else {
+                    timer.schedule(timerT, timeLeft);
+                }
+
+            }
+        db.deleteTimer();
     }
 
     public ArrayList<Auction> favoriteAuction(String user) {
@@ -260,9 +290,13 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
 
     public void setTimerTasks(HashMap<LifeCycleAuctionTask, Long> timerTasks) { this.timerTasks = timerTasks; }
 
-    public HashMap<LifeCycleAuctionTaskDB, Long> getTimerTasksDB() { return timerTasksDB; }
+    public ArrayList<LifeCycleAuctionTaskDB> getTimerTasksDB() {
+        return timerTasksDB;
+    }
 
-    public void setTimerTasksDB(HashMap<LifeCycleAuctionTaskDB, Long> timerTasksDB) { this.timerTasksDB = timerTasksDB; }
+    public void setTimerTasksDB(ArrayList<LifeCycleAuctionTaskDB> timerTasksDB) {
+        this.timerTasksDB = timerTasksDB;
+    }
 
     public int getAuctionIdCounter() { return auctionIdCounter; }
 
@@ -288,6 +322,6 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
         timerTasks = new HashMap<>();
         files = new FileManager(this);
         db = new DBManager (this);
-        timerTasksDB = new HashMap<>();
+        timerTasksDB = new ArrayList<>();
     }
 }

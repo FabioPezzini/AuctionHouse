@@ -17,6 +17,7 @@
         <mapping class="Server.Domain.Lot"/>
         <mapping class="Server.Domain.Bid"/>
         <mapping class="Server.Domain.Favorites"/>
+        <mapping class="Server.Domain.LifeCycleAuctionTaskDB"/>
 
     </session-factory>
 </hibernate-configuration>

@@ -1,11 +1,9 @@
 package Server.People;
 
 import Server.Domain.Auction;
-import Server.Domain.Bid;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,18 +34,6 @@ public class User implements Serializable {
             return username.equals(((User)obj).getUsername());
         else
             return false;
-    }
-
-    @Transactional
-    public void addFavourite(Auction a) {
-        this.favoriteList.add(a);
-        a.getUserLike().add(this);
-    }
-
-    @Transactional
-    public void removeFavourite(Auction a) {
-        this.favoriteList.remove(a);
-        a.getUserLike().remove(this);
     }
 
     public boolean checkPassword(String password){

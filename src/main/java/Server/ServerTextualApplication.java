@@ -21,7 +21,13 @@ public class ServerTextualApplication {
         Scanner scn = new Scanner(System.in);
 
         while(true) {
-            System.out.println("1)Carica da File   2)Salva su file   3)Ricarica Immagini   4)Spegni Server");
+            sys.setAuctionIdCounter(sys.getDb().idOfAuction());
+            System.out.println("Immagini ricaricate");
+
+            sys.refreshTimerStats();
+            System.out.println("Timer ricaricati");
+
+            System.out.println("1)Carica da File   2)Salva su file   3)Spegni Server");
             int decision = scn.nextInt();
             switch (decision) {
                 case 1:
@@ -31,11 +37,8 @@ public class ServerTextualApplication {
                     sys.saveState();
                     break;
                 case 3:
-                    sys.setAuctionIdCounter(sys.getDb().idOfAuction());
-                    System.out.println("Immagini ricaricate");
-                    break;
-                case 4:
                     try {
+                        sys.saveTimerStats();
                         reg.unbind("hii");
                         UnicastRemoteObject.unexportObject(sys,true);
 

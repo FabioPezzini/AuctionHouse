@@ -43,6 +43,9 @@ public class Auction implements Serializable {
     @ManyToMany(mappedBy = "favoriteList")
     private List<User> userLike = new ArrayList<>();
 
+    @OneToOne(mappedBy = "auction",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private LifeCycleAuctionTaskDB timer;
+
 
 
     /**

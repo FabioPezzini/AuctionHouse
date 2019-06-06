@@ -14,9 +14,7 @@ import Server.services.DBConnection.HibernateUtil;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 
@@ -507,6 +505,61 @@ public class DBManager {
         }
         return false;
     }
+
+    public void saveTimer( ArrayList<LifeCycleAuctionTaskDB> timerTasksDB) {
+        s = sessionFactory.openSession();
+        try {
+            s.beginTransaction();
+                for(LifeCycleAuctionTaskDB timer : timerTasksDB) {
+                s.saveOrUpdate(timer);
+            }
+
+
+        }catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            s.getTransaction().commit();
+            s.close();
+        }
+    }
+
+    public List<LifeCycleAuctionTaskDB> reloadTimer() {
+        s = sessionFactory.openSession();
+
+        String sql = "FROM LifeCycleAuctionTaskDB";
+        try {
+            s.beginTransaction();
+            Query query = s.createQuery(sql);
+            List<LifeCycleAuctionTaskDB> list = (List<LifeCycleAuctionTaskDB>)query.list();
+            s.getTransaction().commit();
+            return list;
+        }catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+
+            s.close();
+        }
+        return null;
+    }
+
+    public void deleteTimer() {
+        s = sessionFactory.openSession();
+        String sql = "DELETE FROM LifeCycleAuctionTaskDB";
+
+        try {
+            s.beginTransaction();
+            Query query = s.createQuery(sql);
+            query.executeUpdate();
+        }catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            s.getTransaction().commit();
+            s.close();
+        }
+    }
+
+
+
 
 
 

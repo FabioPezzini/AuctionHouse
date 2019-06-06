@@ -1,18 +1,36 @@
 package Server.Domain;
 
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TimerTask;
 
+@Entity
+@Table(name = "TIMER")
 public class LifeCycleAuctionTaskDB extends TimerTask implements Serializable {
+
+    @Id
+    @OneToOne
+    @JoinColumn(name = "id", referencedColumnName = "id")
+    private Auction auction;
+
+    @Transient
     private int id;
+
+    @Column(name = "millis", updatable = false, nullable = false)
     private long closeMillis;
+
+    @Transient
     private final long CLOSED_ITEM_CLEANUP_PERIOD = 60 * (60 * 1000); // DA USARE SOLO SE SI VUOLE PULIRE LA LISTA DI INSERZIONI CONCLUSE, espresso in millisecondi, attuale: 60 minuti
 
-    private HashMap<LifeCycleAuctionTaskDB, Long> timerTasks;
+    @Transient
+    private ArrayList<LifeCycleAuctionTaskDB> timerTasks;
+
+    @Transient
     private DBManager dbManager;
 
-    public void passArgument(HashMap<LifeCycleAuctionTaskDB, Long> timerTasks,DBManager db){
+    public void passArgument(ArrayList<LifeCycleAuctionTaskDB> timerTasks, DBManager db){
         this.timerTasks = timerTasks;
         this.dbManager = db;
     }
@@ -26,7 +44,7 @@ public class LifeCycleAuctionTaskDB extends TimerTask implements Serializable {
     }
 
     public int getId() {
-        return id;
+        return auction.getId();
     }
 
     @Override
@@ -41,8 +59,28 @@ public class LifeCycleAuctionTaskDB extends TimerTask implements Serializable {
         }
     }
 
-    public LifeCycleAuctionTaskDB(int auctionId, long millis) {
-        this.id = auctionId;
+    public LifeCycleAuctionTaskDB() {
+    }
+
+    public Auction getAuction() {
+        return auction;
+    }
+
+    public void setAuction(Auction auction) {
+        this.auction = auction;
+    }
+
+    public long getCloseMillis() {
+        return closeMillis;
+    }
+
+    public void setCloseMillis(long closeMillis) {
+        this.closeMillis = closeMillis;
+    }
+
+    public LifeCycleAuctionTaskDB(Auction auction, long millis) {
+        this.auction = auction;
+        this.id = auction.getId();
         this.closeMillis = millis;
     }
 }

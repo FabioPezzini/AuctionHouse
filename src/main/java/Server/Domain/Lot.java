@@ -120,7 +120,6 @@ public class Lot implements Serializable {
         this.basePrice = basePrice;
     }
 
-
     public Auction getAuL() {
         return auL;
     }
@@ -128,7 +127,6 @@ public class Lot implements Serializable {
     public void setAuL(Auction auL) {
         this.auL = auL;
     }
-
 
 
     public Lot() {}
