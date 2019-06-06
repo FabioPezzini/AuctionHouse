@@ -15,7 +15,7 @@ public class LifeCycleAuctionTaskDB extends TimerTask implements Serializable {
     @JoinColumn(name = "id", referencedColumnName = "id")
     private Auction auction;
 
-    @Transient
+    @Column(name = "auction", updatable = false, nullable = false)
     private int id;
 
     @Column(name = "millis", updatable = false, nullable = false)
@@ -44,13 +44,14 @@ public class LifeCycleAuctionTaskDB extends TimerTask implements Serializable {
     }
 
     public int getId() {
-        return auction.getId();
+        return id;
     }
 
     @Override
     public void run() {
         synchronized(this) {
             if (!dbManager.isClosed(id)) {
+                System.out.println(id);
                 // Move auction to closed
                 dbManager.winner(id);
                 dbManager.closeAuction(id);

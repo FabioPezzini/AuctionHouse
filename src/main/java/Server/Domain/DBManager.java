@@ -541,7 +541,7 @@ public class DBManager {
         }
         return null;
     }
-
+    
     public void deleteTimer() {
         s = sessionFactory.openSession();
         String sql = "DELETE FROM LifeCycleAuctionTaskDB";

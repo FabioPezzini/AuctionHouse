@@ -117,6 +117,7 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
         long millis = zdt.toInstant().toEpochMilli();
         LifeCycleAuctionTaskDB t = new LifeCycleAuctionTaskDB(db.getAuction(auctionId),millis);
         t.passArgument(timerTasksDB,db);
+        System.out.println(t.getId());
         timer.schedule(t, (millis - System.currentTimeMillis()));
         timerTasksDB.add(t);
     }
@@ -220,6 +221,7 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
             Timer timer = new Timer();
 
             for (LifeCycleAuctionTaskDB timerT : timerTasksDB) {
+                System.out.println(timerT.getId());
                 // Reschedule task to initial value subtracted how much has already elapsed
                 timerT.passArgument(timerTasksDB,db);
                 long timeLeft = timerT.getTimeLeft();
