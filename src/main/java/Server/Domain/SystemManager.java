@@ -236,6 +236,8 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
         db.deleteTimer();
     }
 
+    public ArrayList<Auction> myAuctionList(String username) { return db.myAuctionList(username); }
+
     public ArrayList<Auction> favoriteAuction(String user) {
         return db.favoriteAuction(user);
     }

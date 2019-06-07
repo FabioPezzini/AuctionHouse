@@ -27,6 +27,10 @@ public class User implements Serializable {
     @JoinTable(name = "favorites", joinColumns = { @JoinColumn(name = "username")},inverseJoinColumns = {@JoinColumn(name = "id")})
     private List<Auction> favoriteList = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(name = "partecipants", joinColumns = { @JoinColumn(name = "username")},inverseJoinColumns = {@JoinColumn(name = "id")})
+    private List<Auction> partecipantAuction = new ArrayList<>();
+
 
 
     public boolean equals(Object obj) {
@@ -67,6 +71,14 @@ public class User implements Serializable {
     public List<Auction> getFavoriteList() { return favoriteList; }
 
     public void setFavoriteList(List<Auction> favoriteList) { this.favoriteList = favoriteList; }
+
+    public List<Auction> getPartecipantAuction() {
+        return partecipantAuction;
+    }
+
+    public void setPartecipantAuction(List<Auction> partecipantAuction) {
+        this.partecipantAuction = partecipantAuction;
+    }
 
     public User() {}
 

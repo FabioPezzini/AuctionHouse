@@ -274,6 +274,10 @@ public class ClientManager {
         return ad.favoriteAuction(loggedUser);
     }
 
+    public ArrayList<Auction> myAuction() throws RemoteException {
+        return ad.myAuctionList(loggedUser);
+    }
+
     public void saveUserStateFavorites(User user,Auction au, int choose) throws RemoteException {
         ad.saveUserStateDB(user,au,choose);
     }

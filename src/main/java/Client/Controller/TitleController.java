@@ -60,6 +60,7 @@ public class TitleController {
     @FXML
     private void viewFavorites() {
         try {
+            setVisibleButtons();
             favoriteButton.setVisible(false);
             auctionListController.loadFavorite();
 
@@ -71,8 +72,9 @@ public class TitleController {
     @FXML
     private void myAuction () {
         try {
+            setVisibleButtons();
             myAuction.setVisible(false);
-            auctionListController.loadFavorite();
+            auctionListController.loadMyAuction();
 
         }catch (Exception e) {
             e.printStackTrace();

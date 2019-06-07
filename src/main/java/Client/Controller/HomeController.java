@@ -95,6 +95,8 @@ public class HomeController {
             String text = searchText.getText();
 
             auctionListController.searchList(text);
+
+            titleController.setVisibleButtons();
         }
     }
 

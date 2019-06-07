@@ -192,9 +192,11 @@ public class DBManager {
             b.setActorDB(u);
             b.setAmount(amount);
             Auction a = s.get(Auction.class,id);
+            Hibernate.initialize(u.getPartecipantAuction());
             if(amount> a.getHigherOffer()) {
                 a.addBidDB(b);
                 a.setHigherOffer(amount);
+                u.getPartecipantAuction().add(a);
                 s.saveOrUpdate(a);
                 s.getTransaction().commit();
                 return true;
@@ -207,6 +209,7 @@ public class DBManager {
         }
         return false;
     }
+
 
     public boolean vendorOfAuction(int idAuction,String logged) {
        s = sessionFactory.openSession();
@@ -411,6 +414,35 @@ public class DBManager {
 
             return Alist;
 
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            s.close();
+        }
+        return null;
+    }
+
+    public ArrayList<Auction> myAuctionList(String username) {
+        s = sessionFactory.openSession();
+        ArrayList<Auction> Alist = new ArrayList<>();
+
+        String sql = "FROM  Auction";
+        try {
+            Query query = s.createQuery(sql);
+            List<Auction> list = (List<Auction>)query.list();
+            User user = s.get(User.class, username);
+            Hibernate.initialize(user.getPartecipantAuction());
+            for (int i = 0; i < list.size() && i <= 9; i++) {
+                Auction a = list.get(i);
+                if(a.getLot().getVendorDB().equals(user) || user.getPartecipantAuction().contains(a)) {
+                    File image = new File("src\\main\\java\\Server\\services\\AuctionImages\\" + a.getId() + ".png");
+                    a.setImage(image);
+
+                    Alist.add(a);
+                }
+            }
+
+            return Alist;
         } catch (Exception e){
             e.printStackTrace();
         } finally {

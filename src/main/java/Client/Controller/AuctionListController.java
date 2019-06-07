@@ -72,6 +72,13 @@ public class AuctionListController {
                 e.printStackTrace();
             }
         }
+        else if (typeOfSearch == 3) {
+            try {
+                Alist = client.myAuction();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
         if(Alist != null) {
             for (int i = 0; i < Alist.size(); i++) {
                 auction.add(Alist.get(i));
@@ -149,6 +156,11 @@ public class AuctionListController {
     public void loadFavorite() {
         //Per un bug visuale se non ricarico la Lista andando ad aggiornare solo l'observable list si buggano le immagini, probabilmente visto che uso una custom list cell
         initializeList(2,null);
+    }
+
+    public void loadMyAuction() {
+        //Per un bug visuale se non ricarico la Lista andando ad aggiornare solo l'observable list si buggano le immagini, probabilmente visto che uso una custom list cell
+        initializeList(3,null);
     }
 
     @FXML

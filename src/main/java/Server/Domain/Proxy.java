@@ -64,4 +64,5 @@ public interface Proxy extends Remote {
 
     ArrayList<Auction> searchAuctionList(String textToSearch) throws RemoteException;
 
+    ArrayList<Auction> myAuctionList(String username) throws RemoteException;
 }

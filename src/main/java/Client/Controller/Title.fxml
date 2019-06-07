@@ -8,7 +8,7 @@
 <AnchorPane prefHeight="78.0" prefWidth="673.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.Controller.TitleController">
    <JFXButton fx:id="logout" layoutX="538.0" layoutY="24.0" onAction="#handleLogout" prefHeight="31.0" prefWidth="86.0" style="-fx-background-radius: 100; -fx-background-color: #c8e6c9;" text="Logout" />
    <JFXButton fx:id="userSection" layoutX="401.0" layoutY="25.0" prefHeight="31.0" prefWidth="86.0" style="-fx-background-radius: 100; -fx-background-color: #c8e6c9;" text="User" />
-   <JFXButton fx:id="myAuction" layoutX="264.0" layoutY="24.0" prefHeight="31.0" prefWidth="86.0" style="-fx-background-radius: 100; -fx-background-color: #c8e6c9;" text="My Auctions" />
+   <JFXButton fx:id="myAuction" layoutX="264.0" layoutY="24.0" onAction="#myAuction" prefHeight="31.0" prefWidth="86.0" style="-fx-background-radius: 100; -fx-background-color: #c8e6c9;" text="My Auctions" />
    <JFXButton fx:id="favoriteButton" layoutX="125.0" layoutY="24.0" onAction="#viewFavorites" prefHeight="31.0" prefWidth="86.0" style="-fx-background-radius: 100; -fx-background-color: #c8e6c9;" text="Favorites" />
    <ImageView fitHeight="68.0" fitWidth="278.0" pickOnBounds="true" preserveRatio="true">
       <image>
