@@ -6,6 +6,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDateTime;
@@ -117,7 +118,6 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
         long millis = zdt.toInstant().toEpochMilli();
         LifeCycleAuctionTaskDB t = new LifeCycleAuctionTaskDB(db.getAuction(auctionId),millis);
         t.passArgument(timerTasksDB,db);
-        System.out.println(t.getId());
         timer.schedule(t, (millis - System.currentTimeMillis()));
         timerTasksDB.add(t);
     }
@@ -215,15 +215,24 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
     }
 
     public void refreshTimerStats() {
-        timerTasksDB = (ArrayList<LifeCycleAuctionTaskDB>)db.reloadTimer();
+        HashMap<Integer, BigInteger> timerValue = new HashMap<>();
+        timerValue = db.reloadTimer();
+
+        for(Map.Entry<Integer, BigInteger> entry : timerValue.entrySet()) {
+            Integer key = entry.getKey();
+            Long value = entry.getValue().longValue();
+            System.out.println(key);
+            System.out.println(value);
+        }
 
 
-            Timer timer = new Timer();
 
-            for (LifeCycleAuctionTaskDB timerT : timerTasksDB) {
-                System.out.println(timerT.getId());
+
+        for(Map.Entry<Integer, BigInteger> entry : timerValue.entrySet()) {
                 // Reschedule task to initial value subtracted how much has already elapsed
+                LifeCycleAuctionTaskDB timerT = new LifeCycleAuctionTaskDB(entry.getKey(),entry.getValue().longValue());
                 timerT.passArgument(timerTasksDB,db);
+                Timer timer = new Timer();
                 long timeLeft = timerT.getTimeLeft();
                 if(timeLeft < 0) {
                    timerT.run();

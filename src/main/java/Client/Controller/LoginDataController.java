@@ -6,10 +6,12 @@ import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -83,7 +85,7 @@ public class LoginDataController {
     }
 
     @FXML
-    private void changeSceneSignUp() throws RemoteException, IOException {
+    private void changeSceneSignUp() throws IOException {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/Client/Controller/SignUp.fxml"));
         Parent root = (Parent) loader.load();
@@ -92,7 +94,23 @@ public class LoginDataController {
         popUpStage.initOwner(primaryStage);
         popUpStage.initModality(Modality.APPLICATION_MODAL);
         popUpStage.setScene(new Scene(root));
+
+        // Calculate the center position of the parent Stage
+        double centerXPosition = primaryStage.getX() + primaryStage.getWidth()/2d;
+        double centerYPosition = primaryStage.getY() + primaryStage.getHeight()/2d;
+
+        // Hide the pop-up stage before it is shown and becomes relocated
+        popUpStage.setOnShowing(ev -> popUpStage.hide());
+
+        // Relocate the pop-up Stage
+        popUpStage.setOnShown(ev -> {
+            popUpStage.setX(centerXPosition - popUpStage.getWidth()/2d);
+            popUpStage.setY(centerYPosition - popUpStage.getHeight()/2d);
+            popUpStage.show();
+        });
+
         popUpStage.show();
+
 
         ((SignUpController)loader.getController()).setClient(client);
         ((SignUpController)loader.getController()).setPopUpStage(popUpStage);

@@ -18,7 +18,7 @@ public class LifeCycleAuctionTaskDB extends TimerTask implements Serializable {
     private int id;
 
     @Column(name = "millis", updatable = false, nullable = false)
-    private long closeMillis;
+    private Long closeMillis;
 
     @Transient
     private final long CLOSED_ITEM_CLEANUP_PERIOD = 60 * (60 * 1000); // DA USARE SOLO SE SI VUOLE PULIRE LA LISTA DI INSERZIONI CONCLUSE, espresso in millisecondi, attuale: 60 minuti
@@ -75,6 +75,15 @@ public class LifeCycleAuctionTaskDB extends TimerTask implements Serializable {
     }
 
     public void setCloseMillis(long closeMillis) {
+        this.closeMillis = closeMillis;
+    }
+
+    public void setDbManager(DBManager dbManager) {
+        this.dbManager = dbManager;
+    }
+
+    public LifeCycleAuctionTaskDB(int id, long closeMillis) {
+        this.id = id;
         this.closeMillis = closeMillis;
     }
 

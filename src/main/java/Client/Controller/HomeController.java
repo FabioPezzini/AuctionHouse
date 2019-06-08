@@ -64,6 +64,21 @@ public class HomeController {
         popUpStage.initOwner(primaryStage);
         popUpStage.initModality(Modality.APPLICATION_MODAL);
         popUpStage.setScene(new Scene(root));
+
+        // Calculate the center position of the parent Stage
+        double centerXPosition = primaryStage.getX() + primaryStage.getWidth()/2d;
+        double centerYPosition = primaryStage.getY() + primaryStage.getHeight()/2d;
+
+        // Hide the pop-up stage before it is shown and becomes relocated
+        popUpStage.setOnShowing(ev -> popUpStage.hide());
+
+        // Relocate the pop-up Stage
+        popUpStage.setOnShown(ev -> {
+            popUpStage.setX(centerXPosition - popUpStage.getWidth()/2d);
+            popUpStage.setY(centerYPosition - popUpStage.getHeight()/2d);
+            popUpStage.show();
+        });
+
         popUpStage.show();
 
         windowsPane.setEffect(blur);

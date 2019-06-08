@@ -7,8 +7,10 @@ import animatefx.animation.FadeIn;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -63,6 +65,12 @@ public class Main extends Application {
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
             primaryStage.show();
+
+            Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+            primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
+            primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
+
+            primaryStage.setResizable(false);
 
             //Animate the stage
             new FadeIn(rootLayout).play();

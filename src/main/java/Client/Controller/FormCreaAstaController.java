@@ -83,6 +83,7 @@ public class FormCreaAstaController {
                 alert.setHeaderText("Asta Creata con successo");
 
                 alert.showAndWait();
+                backToHome();
             }
             else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);

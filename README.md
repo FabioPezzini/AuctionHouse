@@ -2,11 +2,11 @@
 
 To Do IMPORTANTI:
 
--Fixare immagini nelle AuctionCard (quelle grandi)
--Aggiungere scena preferiti
--Aggiungere scena area personale con aste concluse ed in quel caso mette in contatto (con ad esempio email) oppure servizio chat
--Aggiungere scena aste create (dall'utente)
+- Fixare immagini nelle AuctionCard (quelle grandi)
+
 
 To Do MINOR:
-
--
+- Centrare AuctionCard
+- Fare reload automatico quando crei asta
+- Creare alert personalizzati
+- Formattare data nella list view e nella card

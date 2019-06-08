@@ -10,9 +10,8 @@ import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 import Server.services.DBConnection.HibernateUtil;
 
-
-import javax.transaction.Transactional;
 import java.io.File;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -408,7 +407,6 @@ public class DBManager {
                 File image = new File("src\\main\\java\\Server\\services\\AuctionImages\\" + a.getId() + ".png");
                 a.setImage(image);
                 Alist.add(a);
-                System.out.println(a.getId());
             }
 
 
@@ -555,16 +553,23 @@ public class DBManager {
         }
     }
 
-    public List<LifeCycleAuctionTaskDB> reloadTimer() {
+    public HashMap<Integer, BigInteger> reloadTimer() {
         s = sessionFactory.openSession();
 
-        String sql = "FROM LifeCycleAuctionTaskDB";
+        String sql = "SELECT auction FROM timer ";
+        String sql2 = "SELECT millis FROM timer ";
         try {
             s.beginTransaction();
-            Query query = s.createQuery(sql);
-            List<LifeCycleAuctionTaskDB> list = (List<LifeCycleAuctionTaskDB>)query.list();
+            NativeQuery query = s.createSQLQuery(sql);
+            List<Integer> a = query.getResultList();
+            NativeQuery query2 = s.createSQLQuery(sql2);
+            List<BigInteger> b = query2.getResultList();
+            HashMap<Integer,BigInteger> timer = new HashMap<>();
+            for(int i =0; i < a.size(); i++) {
+                timer.put(a.get(i),b.get(i));
+            }
             s.getTransaction().commit();
-            return list;
+            return timer;
         }catch (HibernateException e) {
             e.printStackTrace();
         } finally {

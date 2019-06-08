@@ -171,7 +171,7 @@ public class ClientManager {
     }
 
     public int createAuctionGUI(String name,String description,int basePrice,LocalDateTime close) throws RemoteException {
-        if(!close.isBefore(ad.currentiTime())) {
+        if(!close.isBefore(ad.currentiTime()) && !close.isEqual(ad.currentiTime())) {
             ad.addAuctionDB(name,basePrice,loggedUser,close);
             return 1;
         }
