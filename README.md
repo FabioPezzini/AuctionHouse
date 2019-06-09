@@ -6,7 +6,6 @@ To Do IMPORTANTI:
 
 
 To Do MINOR:
-- Centrare AuctionCard
 - Fare reload automatico quando crei asta
 - Creare alert personalizzati
 - Formattare data nella list view e nella card

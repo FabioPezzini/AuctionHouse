@@ -1,9 +1,13 @@
 package Client;
 
 import Client.Controller.LoginDataController;
+import Client.Controller.SignUpController;
 import Client.Domain.ClientManager;
 import Client.Domain.ConnectionLayer;
 import animatefx.animation.FadeIn;
+import animatefx.animation.FadeInUp;
+import animatefx.animation.FadeOut;
+import animatefx.animation.ZoomIn;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -23,8 +27,10 @@ public class Main extends Application {
     private ConnectionLayer connection;
     private ClientManager c;
 
+    private LoginDataController loginDataController;
+
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("AuctionHouse");
 
@@ -51,7 +57,7 @@ public class Main extends Application {
     /**
      * Initializes the root layout.
      */
-    public void initRootLayout() {
+    private void initRootLayout() {
         try {
             connection = new ConnectionLayer("hii");
             c = new ClientManager(connection, connection.getServer());
@@ -76,14 +82,14 @@ public class Main extends Application {
             new FadeIn(rootLayout).play();
 
             //Passo riferimento a stage e connessione
-            ((LoginDataController)loader.getController()).setClient(c);
-            ((LoginDataController)loader.getController()).setPrimaryStage(primaryStage);
+            loginDataController = (LoginDataController) loader.getController();
+            loginDataController.setPrimaryStage(primaryStage);
+            loginDataController.setClient(c);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 
 
     public static void main(String[] args) {
