@@ -457,7 +457,8 @@ public class DBManager {
             query.setParameter("id",id);
             Auction a = (Auction)query.getSingleResult();
             File image = new File("src\\main\\java\\Server\\services\\AuctionImages\\" + a.getId() + ".png");
-            a.setImage(image);
+            if(image.exists())
+                a.setImage(image);
             return a;
         }catch (Exception e){
             e.printStackTrace();

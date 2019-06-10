@@ -53,6 +53,7 @@ public class LoginDataController {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Ottimo");
             alert.setHeaderText("Login Eseguito");
+            alert.initOwner(primaryStage);
 
             alert.showAndWait();
 
@@ -71,6 +72,7 @@ public class LoginDataController {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Login");
             alert.setHeaderText("Username and Password doesn't exist!");
+            alert.initOwner(primaryStage);
 
             alert.showAndWait();
         }
@@ -80,6 +82,7 @@ public class LoginDataController {
             alert.setTitle("Error SignUp");
             alert.setHeaderText("Invalid Password");
             alert.setContentText("Someone is alredy logged in your account,if you believe it is an unauthorized access contact the system's manager ");
+            alert.initOwner(primaryStage);
 
             alert.showAndWait();
         }

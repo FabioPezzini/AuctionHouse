@@ -32,6 +32,7 @@ public class SignUpController {
             alert.setTitle("Information Dialog");
             alert.setHeaderText(null);
             alert.setContentText("User create successfully");
+            alert.initOwner(popUpStage);
 
             alert.showAndWait();
         }
@@ -40,6 +41,7 @@ public class SignUpController {
             alert.setTitle("Error SignUp");
             alert.setHeaderText("Error ");
             alert.setContentText("Username alredy exist");
+            alert.initOwner(popUpStage);
 
             alert.showAndWait();
 
@@ -49,6 +51,7 @@ public class SignUpController {
             alert.setTitle("Error SignUp");
             alert.setHeaderText("Error ");
             alert.setContentText("Use at least 1.....ELENCO PARAMETRI PASS");
+            alert.initOwner(popUpStage);
 
             alert.showAndWait();
         }

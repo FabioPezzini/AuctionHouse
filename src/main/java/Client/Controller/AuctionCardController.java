@@ -23,6 +23,7 @@ import javafx.util.Duration;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -67,7 +68,6 @@ public class AuctionCardController {
     private FontAwesomeIconView star;
 
 
-
     @FXML
     private Label timer;
     private Timeline timeline;
@@ -100,10 +100,9 @@ public class AuctionCardController {
 
 
         Image img;
-        auctionImage = new ImageView();
 
 
-        if(auction.getImage().exists()) {
+        if(auction.getImage() == null) {
 
                 //img = new Image(new FileInputStream(auction.getImage()),100,100,false,false);
                 //img = new Image((auction.getImage().toURI().toString()));
@@ -118,33 +117,23 @@ public class AuctionCardController {
                 }
                 //In alternativa a tutto quello sopra a partire dal try si puo' usare questo path: target/classes/Images/i_have_no_idea.png
                 String absolutePath = file.getAbsolutePath();
-                img = new Image(new FileInputStream(absolutePath), 100, 100, false, false);
+                img = new Image(new FileInputStream(absolutePath),268,226,false,false);
 
-                auctionImage = new ImageView();
                 auctionImage.setImage(img);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         }
         else {
-            try {
-                File file = null;
                 try {
-                    URL res = getClass().getClassLoader().getResource("Images/i_have_no_idea.png");
-                    file = Paths.get(res.toURI()).toFile();
-                }catch (URISyntaxException e) {
+                    img = new Image(new FileInputStream(auction.getImage()),268,226,false,false);
+
+                    auctionImage.setImage(img);
+                }catch (IOException e) {
                     e.printStackTrace();
                 }
-                //In alternativa a tutto quello sopra a partire dal try si puo' usare questo path: target/classes/Images/i_have_no_idea.png
-                String absolutePath = file.getAbsolutePath();
-                img = new Image(new FileInputStream(absolutePath), 100, 100, false, false);
-
-                auctionImage = new ImageView();
-                auctionImage.setImage(img);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
         }
+
 
         ZonedDateTime zdt = auction.getClosingDate().atZone(ZoneId.of("Europe/Rome"));
         long millis = zdt.toInstant().toEpochMilli() - System.currentTimeMillis();
@@ -220,6 +209,7 @@ public class AuctionCardController {
             alert.setTitle("Error Offer");
             alert.setHeaderText("Error ");
             alert.setContentText("Il creatore dell'asta non puo' fare offerte sulla stessa");
+            alert.initOwner(popUpStage);
 
             alert.showAndWait();
         }

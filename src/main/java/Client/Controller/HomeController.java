@@ -4,6 +4,7 @@ import Client.Domain.ClientManager;
 
 import Server.Domain.Auction;
 import animatefx.animation.FadeIn;
+import animatefx.animation.Pulse;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import javafx.event.ActionEvent;
@@ -113,6 +114,7 @@ public class HomeController {
 
             titleController.setVisibleButtons();
         }
+        new Pulse(search).setSpeed(2).play();
     }
 
 

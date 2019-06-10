@@ -1,6 +1,7 @@
 package Client.Controller;
 
 import Client.Domain.ClientManager;
+import animatefx.animation.*;
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -61,8 +62,10 @@ public class TitleController {
     private void viewFavorites() {
         try {
             setVisibleButtons();
-            favoriteButton.setVisible(false);
             auctionListController.loadFavorite();
+            //favoriteButton.setVisible(false);
+            new BounceOut(favoriteButton).play();
+            favoriteButton.setDisable(true);
 
         }catch (Exception e) {
             e.printStackTrace();
@@ -73,7 +76,9 @@ public class TitleController {
     private void myAuction () {
         try {
             setVisibleButtons();
-            myAuction.setVisible(false);
+            //myAuction.setVisible(false);
+            new BounceOut(myAuction).play();
+            myAuction.setDisable(true);
             auctionListController.loadMyAuction();
 
         }catch (Exception e) {
@@ -83,9 +88,17 @@ public class TitleController {
     }
 
     public void setVisibleButtons() {
-        favoriteButton.setVisible(true);
-        userSection.setVisible(true);
-        myAuction.setVisible(true);
+        //favoriteButton.setVisible(true);
+        new BounceIn(favoriteButton).play();
+        favoriteButton.setDisable(false);
+
+        //userSection.setVisible(true);
+        new BounceIn(userSection).play();
+        userSection.setDisable(false);
+        //myAuction.setVisible(true);
+        new BounceIn(myAuction).play();
+        myAuction.setDisable(false);
+
     }
 
 

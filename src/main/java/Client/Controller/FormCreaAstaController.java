@@ -65,6 +65,7 @@ public class FormCreaAstaController {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error File");
                 alert.setHeaderText("File is not valid! Only jpg and png are allowed");
+                alert.initOwner(popUpStage);
 
                 alert.showAndWait();
             }
@@ -81,6 +82,7 @@ public class FormCreaAstaController {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Ottimo");
                 alert.setHeaderText("Asta Creata con successo");
+                alert.initOwner(popUpStage);
 
                 alert.showAndWait();
 
@@ -90,6 +92,7 @@ public class FormCreaAstaController {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error Date");
                 alert.setHeaderText("La data inserita non e' valida, inserire una data successiva a quella attuale");
+                alert.initOwner(popUpStage);
 
                 alert.showAndWait();
             }
@@ -98,6 +101,7 @@ public class FormCreaAstaController {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Input");
             alert.setHeaderText("I campi non posso essere nulli, eccetto descrizione ed immagine");
+            alert.initOwner(popUpStage);
 
             alert.showAndWait();
         }
