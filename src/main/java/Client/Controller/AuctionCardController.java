@@ -28,8 +28,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 
@@ -96,7 +98,7 @@ public class AuctionCardController {
         }
 
         vendor.setText(auction.getLot().getVendorDB().getUsername());
-        closeDate.setText(auction.getClosingDate().toString());
+        closeDate.setText(parseDate(auction.getClosingDate()));
 
 
         Image img;
@@ -147,17 +149,17 @@ public class AuctionCardController {
                 if(second > 0) {
                     second--;
                 }
-                else if(second < 0 ) {
+                else if(second <= 0 ) {
                     second = 59;
                     if(minute > 0) {
                         minute--;
                     }
-                    else if (minute < 0) {
+                    else if (minute <= 0) {
                         minute = 59;
                         if(hour > 0) {
                             hour--;
                         }
-                        else if(hour < 0) {
+                        else if(hour <= 0) {
                             hour = 23;
                             if(day > 0) {
                                 day--;
@@ -166,7 +168,7 @@ public class AuctionCardController {
                     }
                 }
 
-                timer.setText(day + "D " + " H" + hour + " M" + minute + " S" + second);
+                timer.setText("D" + day  + "  H" + hour + "  M" + minute + "  S" + second);
 
                 if(second <= 0 && minute <= 0 && hour <= 0 && day <= 0) {
                     timeline.stop();
@@ -176,6 +178,11 @@ public class AuctionCardController {
         }));
         timeline.play();
 
+    }
+
+    public String parseDate(LocalDateTime closingTime) {
+
+        return closingTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")).toString();
     }
 
     @FXML

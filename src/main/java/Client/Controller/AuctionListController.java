@@ -29,6 +29,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -127,7 +129,7 @@ public class AuctionListController {
                                 }
 
                                 setGraphic(imgview);
-                                setText("Id:" + Integer.toString(au.getId()) + "\t\t" + "Name:" + au.getLot().getDescription() + "\t\t " + "Value:" + Integer.toString(au.getHigherOffer()) + "\n\t\t" + "Close Date:" + au.getClosingDate().toString());
+                                setText("Id: " + Integer.toString(au.getId()) + "\t\t\t" + "Name: " + au.getLot().getDescription() + "\t\t\t\t " + "Value: " + Integer.toString(au.getHigherOffer()) +  "\n\t\t\t\t" + "Close Date: " + parseDate(au.getClosingDate()));
 
                                 setStyle("-fx-background-color: #81c784"); //Da togliere se si vuole lo stacco
                             }
@@ -138,6 +140,11 @@ public class AuctionListController {
             });
             auctionList.setItems(auction);
         }
+    }
+
+    public String parseDate(LocalDateTime closingTime) {
+
+        return closingTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")).toString();
     }
 
 
