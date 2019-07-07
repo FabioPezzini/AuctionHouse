@@ -2,11 +2,7 @@ package Server;
 
 import Server.Domain.FacadeServer;
 
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.Scanner;
 
 public class ServerTextualApplication {
@@ -18,7 +14,7 @@ public class ServerTextualApplication {
         Scanner scn = new Scanner(System.in);
 
         while(true) {
-            sys.setAuctionIdCounter(sys.getDb().idOfAuction());
+            sys.reloadImages();
             System.out.println("!!!Immagini ricaricate!!!");
 
             sys.refreshTimerStats();
@@ -39,7 +35,6 @@ public class ServerTextualApplication {
                     sys.closeServer();
                     System.out.println("Sto spegnendo il server...");
                     System.exit(0);
-
                     break;
                 default:
                     break;

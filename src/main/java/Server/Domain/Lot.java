@@ -1,6 +1,5 @@
 package Server.Domain;
 
-
 import Server.People.User;
 
 import javax.persistence.*;

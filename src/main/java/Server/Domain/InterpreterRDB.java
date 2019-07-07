@@ -537,11 +537,11 @@ public class InterpreterRDB {
         return false;
     }
 
-    public void saveTimer( ArrayList<LifeCycleAuctionTaskDB> timerTasksDB) {
+    public void saveTimer( ArrayList<AuctionDBTimerStrategy> timerTasksDB) {
         s = sessionFactory.openSession();
         try {
             s.beginTransaction();
-                for(LifeCycleAuctionTaskDB timer : timerTasksDB) {
+                for(AuctionDBTimerStrategy timer : timerTasksDB) {
                 s.saveOrUpdate(timer);
             }
 
@@ -582,7 +582,7 @@ public class InterpreterRDB {
     
     public void deleteTimer() {
         s = sessionFactory.openSession();
-        String sql = "DELETE FROM LifeCycleAuctionTaskDB";
+        String sql = "DELETE FROM AuctionDBTimerStrategy";
 
         try {
             s.beginTransaction();

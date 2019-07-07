@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Entity
 @Table(name = "USER")
 public class User implements Serializable {
@@ -30,7 +29,6 @@ public class User implements Serializable {
     @ManyToMany
     @JoinTable(name = "partecipants", joinColumns = { @JoinColumn(name = "username")},inverseJoinColumns = {@JoinColumn(name = "id")})
     private List<Auction> partecipantAuction = new ArrayList<>();
-
 
 
     public boolean equals(Object obj) {

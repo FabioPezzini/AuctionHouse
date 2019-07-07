@@ -44,6 +44,5 @@ public class Partecipants {
         this.auctionReferred = auctionReferred;
     }
 
-    public Partecipants() {
-    }
+    public Partecipants() {}
 }

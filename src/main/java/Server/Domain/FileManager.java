@@ -72,7 +72,7 @@ public class FileManager {
     private void loadTimer() {
         try {
             ObjectInputStream i3 = new ObjectInputStream(new BufferedInputStream(new FileInputStream(TIMERS_FILE)));
-            s.setTimerTasks((HashMap<LifeCycleAuctionTask, Long>) i3.readObject());
+            s.setTimerTasks((HashMap<AuctionTimerStrategy, Long>) i3.readObject());
         }catch(IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -101,7 +101,7 @@ public class FileManager {
      */
     public void reloadTimer() {
         Timer timer = new Timer();
-        for (Map.Entry<LifeCycleAuctionTask, Long> t: s.getTimerTasks().entrySet()) {
+        for (Map.Entry<AuctionTimerStrategy, Long> t: s.getTimerTasks().entrySet()) {
             // Reschedule task to initial value subtracted how much has already elapsed
             t.getKey().passArgument(s.getAuctionList(),s.getClosedAuction(),s.getTimerTasks()); // lo faccio per riallineare i riferimenti
             long timeLeft = t.getKey().getTimeLeft();

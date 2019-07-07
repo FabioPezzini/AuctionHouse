@@ -17,7 +17,7 @@
         <mapping class="Server.Domain.Lot"/>
         <mapping class="Server.Domain.Bid"/>
         <mapping class="Server.Domain.Favorites"/>
-        <mapping class="Server.Domain.LifeCycleAuctionTaskDB"/>
+        <mapping class="Server.Domain.AuctionDBTimerStrategy"/>
         <mapping class="Server.Domain.Partecipants"/>
 
     </session-factory>

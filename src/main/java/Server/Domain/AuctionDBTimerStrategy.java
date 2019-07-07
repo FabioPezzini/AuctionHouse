@@ -7,8 +7,7 @@ import java.util.TimerTask;
 
 @Entity
 @Table(name = "TIMER")
-public class LifeCycleAuctionTaskDB extends TimerTask implements Serializable {
-
+public class AuctionDBTimerStrategy extends TimerTask implements Serializable,StrategyTimer {
     @Id
     @OneToOne
     @JoinColumn(name = "id", referencedColumnName = "id")
@@ -21,15 +20,12 @@ public class LifeCycleAuctionTaskDB extends TimerTask implements Serializable {
     private Long closeMillis;
 
     @Transient
-    private final long CLOSED_ITEM_CLEANUP_PERIOD = 60 * (60 * 1000); // DA USARE SOLO SE SI VUOLE PULIRE LA LISTA DI INSERZIONI CONCLUSE, espresso in millisecondi, attuale: 60 minuti
-
-    @Transient
-    private ArrayList<LifeCycleAuctionTaskDB> timerTasks;
+    private ArrayList<AuctionDBTimerStrategy> timerTasks;
 
     @Transient
     private InterpreterRDB dbManager;
 
-    public void passArgument(ArrayList<LifeCycleAuctionTaskDB> timerTasks, InterpreterRDB db){
+    public void passArgument(ArrayList<AuctionDBTimerStrategy> timerTasks, InterpreterRDB db){
         this.timerTasks = timerTasks;
         this.dbManager = db;
     }
@@ -59,7 +55,7 @@ public class LifeCycleAuctionTaskDB extends TimerTask implements Serializable {
         }
     }
 
-    public LifeCycleAuctionTaskDB() {
+    public AuctionDBTimerStrategy() {
     }
 
     public Auction getAuction() {
@@ -91,7 +87,7 @@ public class LifeCycleAuctionTaskDB extends TimerTask implements Serializable {
     }
 
 
-    public LifeCycleAuctionTaskDB(int id, long closeMillis) {
+    public AuctionDBTimerStrategy(int id, long closeMillis) {
         this.id = id;
         this.closeMillis = closeMillis;
     }
@@ -101,7 +97,7 @@ public class LifeCycleAuctionTaskDB extends TimerTask implements Serializable {
         return 101;
     }
 
-    public LifeCycleAuctionTaskDB(Auction auction, long millis) {
+    public AuctionDBTimerStrategy(Auction auction, long millis) {
         this.auction = auction;
         this.id = auction.getId();
         this.closeMillis = millis;

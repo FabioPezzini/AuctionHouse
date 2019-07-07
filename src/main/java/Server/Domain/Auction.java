@@ -40,7 +40,7 @@ public class Auction implements Serializable {
     private List<User> userLike = new ArrayList<>();
 
     @OneToOne(mappedBy = "auction",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private LifeCycleAuctionTaskDB timer;
+    private AuctionDBTimerStrategy timer;
 
     @Transient
     private File image;
@@ -148,9 +148,9 @@ public class Auction implements Serializable {
 
     public void setPartecipantsList(List<User> partecipantsList) { this.partecipantsList = partecipantsList; }
 
-    public LifeCycleAuctionTaskDB getTimer() { return timer; }
+    public AuctionDBTimerStrategy getTimer() { return timer; }
 
-    public void setTimer(LifeCycleAuctionTaskDB timer) { this.timer = timer; }
+    public void setTimer(AuctionDBTimerStrategy timer) { this.timer = timer; }
 
     public File getImage() {
         return image;

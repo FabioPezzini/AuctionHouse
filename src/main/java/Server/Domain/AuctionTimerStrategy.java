@@ -5,16 +5,15 @@ import java.util.HashMap;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class LifeCycleAuctionTask extends TimerTask implements Serializable {
+public class AuctionTimerStrategy extends TimerTask implements Serializable,StrategyTimer {
     private int id;
-    private long closeMillis;
-    private final long CLOSED_ITEM_CLEANUP_PERIOD = 60 * (60 * 1000); // DA USARE SOLO SE SI VUOLE PULIRE LA LISTA DI INSERZIONI CONCLUSE, espresso in millisecondi, attuale: 60 minuti
+    private Long closeMillis;
 
     private ConcurrentHashMap<Integer,Auction> openAuction;
     private HashMap<Integer,Auction> closedAuction;
-    private HashMap<LifeCycleAuctionTask, Long> timerTasks;
+    private HashMap<AuctionTimerStrategy, Long> timerTasks;
 
-    public void passArgument(ConcurrentHashMap<Integer,Auction> openAuction, HashMap<Integer,Auction> closedAuction,HashMap<LifeCycleAuctionTask, Long> timerTasks){
+    public void passArgument(ConcurrentHashMap<Integer,Auction> openAuction, HashMap<Integer,Auction> closedAuction,HashMap<AuctionTimerStrategy, Long> timerTasks){
         this.openAuction = openAuction;
         this.closedAuction = closedAuction;
         this.timerTasks = timerTasks;
@@ -61,7 +60,7 @@ public class LifeCycleAuctionTask extends TimerTask implements Serializable {
         }
     }
 
-    public LifeCycleAuctionTask(int auctionId, long millis) {
+    public AuctionTimerStrategy(int auctionId, long millis) {
         this.id = auctionId;
         this.closeMillis = millis;
     }

@@ -1,7 +1,6 @@
 package Server.People.Credentials;
 
 public class CharAnalizer {
-    private String line;
 
     public boolean validatePassword(String password){
         if(password.length() >= 8) {
@@ -30,7 +29,6 @@ public class CharAnalizer {
             System.out.println("PASSWORD REJECTED: MINIMUM DIMESION ALLOWED 8 CHARACTERS");
             return false; }
     }
-
 
 
     protected boolean isLetter(String line) {

@@ -1,11 +1,10 @@
 # AuctionHouse
-
-To Do IMPORTANT:
-
-
-To Do MINOR:
+To Do:
 - Fare reload automatico quando crei asta
 - Formattare data nella list view e nella card
+- Controllare correttezza reload timer
+- Aggiungere possibilita' modifica asta
+- Aggiungere possibilita' modifica pass
 
 
 Per poter buildare e runnare correttamente il progetto bisogna:
