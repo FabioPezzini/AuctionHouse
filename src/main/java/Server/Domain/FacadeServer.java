@@ -14,10 +14,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
-public class SystemManager extends UnicastRemoteObject implements Proxy {
+public class FacadeServer extends UnicastRemoteObject implements Proxy {
 
     private ConcurrentHashMap<String,User> usersList;
     private ConcurrentHashMap<Integer,Auction> auctionList;
@@ -27,7 +25,7 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
     private int auctionIdCounter = 1; //Valido per FileManager, il valore non e' salvato
     private transient Timer timer;
     private FileManager files;
-    private DBManager db;
+    private InterpreterRDB db;
 
 
     public void createUser(String username, String password){
@@ -323,18 +321,18 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
 
     public void setFiles(FileManager files) { this.files = files; }
 
-    public DBManager getDb() { return db; }
+    public InterpreterRDB getDb() { return db; }
 
-    public void setDb(DBManager db) { this.db = db; }
+    public void setDb(InterpreterRDB db) { this.db = db; }
 
-    public SystemManager() throws RemoteException {
+    public FacadeServer() throws RemoteException {
         usersList = new ConcurrentHashMap<>();
         auctionList = new ConcurrentHashMap<>();
         closedAuction = new HashMap<>();
         timer = new Timer();
         timerTasks = new HashMap<>();
         files = new FileManager(this);
-        db = new DBManager (this);
+        db = new InterpreterRDB(this);
         timerTasksDB = new ArrayList<>();
     }
 }

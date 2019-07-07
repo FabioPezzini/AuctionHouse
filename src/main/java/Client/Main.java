@@ -1,13 +1,9 @@
 package Client;
 
-import Client.Controller.LoginDataController;
-import Client.Controller.SignUpController;
+import Client.Controller.LoginController;
 import Client.Domain.ClientManager;
 import Client.Domain.ConnectionLayer;
 import animatefx.animation.FadeIn;
-import animatefx.animation.FadeInUp;
-import animatefx.animation.FadeOut;
-import animatefx.animation.ZoomIn;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -27,7 +23,7 @@ public class Main extends Application {
     private ConnectionLayer connection;
     private ClientManager c;
 
-    private LoginDataController loginDataController;
+    private LoginController loginDataController;
 
     @Override
     public void start(Stage primaryStage) {
@@ -82,7 +78,7 @@ public class Main extends Application {
             new FadeIn(rootLayout).play();
 
             //Passo riferimento a stage e connessione
-            loginDataController = (LoginDataController) loader.getController();
+            loginDataController = (LoginController) loader.getController();
             loginDataController.setPrimaryStage(primaryStage);
             loginDataController.setClient(c);
 

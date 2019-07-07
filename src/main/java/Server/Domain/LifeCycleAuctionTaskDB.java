@@ -27,9 +27,9 @@ public class LifeCycleAuctionTaskDB extends TimerTask implements Serializable {
     private ArrayList<LifeCycleAuctionTaskDB> timerTasks;
 
     @Transient
-    private DBManager dbManager;
+    private InterpreterRDB dbManager;
 
-    public void passArgument(ArrayList<LifeCycleAuctionTaskDB> timerTasks, DBManager db){
+    public void passArgument(ArrayList<LifeCycleAuctionTaskDB> timerTasks, InterpreterRDB db){
         this.timerTasks = timerTasks;
         this.dbManager = db;
     }
@@ -78,13 +78,27 @@ public class LifeCycleAuctionTaskDB extends TimerTask implements Serializable {
         this.closeMillis = closeMillis;
     }
 
-    public void setDbManager(DBManager dbManager) {
+    public void setDbManager(InterpreterRDB dbManager) {
         this.dbManager = dbManager;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Auction)
+            return ((Auction)obj).getId()==this.id;
+        else
+            return false;
+    }
+
 
     public LifeCycleAuctionTaskDB(int id, long closeMillis) {
         this.id = id;
         this.closeMillis = closeMillis;
+    }
+
+    @Override
+    public int hashCode() {
+        return 101;
     }
 
     public LifeCycleAuctionTaskDB(Auction auction, long millis) {

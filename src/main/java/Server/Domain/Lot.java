@@ -13,9 +13,21 @@ public class Lot implements Serializable {
     @Column(name = "title", nullable = false)
     private String description;
 
-
     @Column(name = "baseprice", updatable = false, nullable = false)
     private int basePrice;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vendor", referencedColumnName = "username")
+    private User vendorDB;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "winner", referencedColumnName = "username")
+    private User winnerDB;
+
+    @Id
+    @OneToOne
+    @JoinColumn(name = "auctionid", referencedColumnName = "id")
+    private Auction auL;
 
     @Transient
     private String pathImage;
@@ -27,33 +39,14 @@ public class Lot implements Serializable {
     private String vendor;
 
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vendor", referencedColumnName = "username")
-    private User vendorDB;
-
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "winner", referencedColumnName = "username")
-    private User winnerDB;
-
-    @Id
-    @OneToOne
-    @JoinColumn(name = "auctionid", referencedColumnName = "id")
-    private Auction auL;
-
+    public int getBasePrice() {
+        return basePrice;
+    }
 
     @Override
     public int hashCode() {
         return 100;
     }
-
-
-
-    public int getBasePrice() {
-        return basePrice;
-    }
-
-
 
     public String getDescription() { return description; }
 
@@ -128,6 +121,13 @@ public class Lot implements Serializable {
         this.auL = auL;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Auction)
+            return (obj)==this.auL;
+        else
+            return false;
+    }
 
     public Lot() {}
 

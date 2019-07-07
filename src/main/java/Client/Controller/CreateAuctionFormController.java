@@ -15,7 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class FormCreaAstaController {
+public class CreateAuctionFormController {
     private ClientManager client;
     private Stage popUpStage;
     private Stage primaryStage;

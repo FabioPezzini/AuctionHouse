@@ -2,7 +2,6 @@ package Client.Controller;
 
 import Client.Domain.ClientManager;
 
-import Server.Domain.Auction;
 import animatefx.animation.FadeIn;
 import animatefx.animation.Pulse;
 import com.jfoenix.controls.JFXButton;
@@ -20,7 +19,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 
@@ -58,7 +56,7 @@ public class HomeController {
     public void createAuctionAction(ActionEvent event) throws IOException {
         BoxBlur blur = new BoxBlur(3,3,3);
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/Client/Controller/FormCreaAsta.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/Client/Controller/CreateAuctionForm.fxml"));
         Parent root = (Parent) loader.load();
 
         Stage popUpStage = new Stage(StageStyle.TRANSPARENT);
@@ -90,9 +88,9 @@ public class HomeController {
         new FadeIn(root).play();
 
 
-        ((FormCreaAstaController)loader.getController()).setClient(client);
-        ((FormCreaAstaController)loader.getController()).setPopUpStage(popUpStage);
-        ((FormCreaAstaController)loader.getController()).setPrimaryStage(primaryStage);
+        ((CreateAuctionFormController)loader.getController()).setClient(client);
+        ((CreateAuctionFormController)loader.getController()).setPopUpStage(popUpStage);
+        ((CreateAuctionFormController)loader.getController()).setPrimaryStage(primaryStage);
     }
 
     @FXML

@@ -168,7 +168,7 @@ public class AuctionCardController {
                     }
                 }
 
-                timer.setText("D" + day  + "  H" + hour + "  M" + minute + "  S" + second);
+                timer.setText("D " + day  + "  H " + hour + "  M " + minute + "  S " + second);
 
                 if(second <= 0 && minute <= 0 && hour <= 0 && day <= 0) {
                     timeline.stop();

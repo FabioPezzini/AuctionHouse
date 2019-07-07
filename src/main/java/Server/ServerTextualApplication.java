@@ -1,6 +1,6 @@
 package Server;
 
-import Server.Domain.SystemManager;
+import Server.Domain.FacadeServer;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -11,9 +11,9 @@ import java.util.Scanner;
 
 public class ServerTextualApplication {
     public static void main(String[] args) throws RemoteException {
-        SystemManager sys = new SystemManager();
+        FacadeServer sys = new FacadeServer();
 
-        Registry reg = LocateRegistry.createRegistry(1099);
+        Registry reg = LocateRegistry.createRegistry(999);
         //System.setProperty("java.rmi.server.hostname","LOCAL_IP");
         reg.rebind("hii", sys);
         System.out.println("Server Ready");

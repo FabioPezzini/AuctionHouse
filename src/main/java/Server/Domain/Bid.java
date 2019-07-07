@@ -9,28 +9,26 @@ import java.io.Serializable;
 @Table(name = "BID")
 public class Bid implements Serializable {
     @Id
-    //@GeneratedValue(strategy=GenerationType.IDENTITY) C'e' un bug con Hibernate non ancora risolto, non posso usare reflection su generated valuehttps://hibernate.atlassian.net/browse/HHH-10956
+    //@GeneratedValue(strategy=GenerationType.IDENTITY) C'e' un bug con Hibernate non ancora risolto, non posso usare reflection su generated value https://hibernate.atlassian.net/browse/HHH-10956
     @Column(name = "id", updatable = false)
     private int id;
-
-    @Transient
-    private int idAu;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "auctionid")
     private Auction au;
 
-
-    @Transient
-    private String actor;
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "offerer", referencedColumnName = "username")
     private User actorDB;
 
-
     @Column(name = "amount", updatable = false)
     private int amount;
+
+    @Transient
+    private int idAu;
+
+    @Transient
+    private String actor;
 
     public String getActor() {
         return actor;
@@ -95,7 +93,6 @@ public class Bid implements Serializable {
     }
 
     public Bid(String actor, int amount) {
-
         this.actor = actor;
         this.amount = amount;
     }

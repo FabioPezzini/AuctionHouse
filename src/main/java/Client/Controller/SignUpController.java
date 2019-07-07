@@ -4,7 +4,6 @@ import Client.Domain.ClientManager;
 import com.jfoenix.controls.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.rmi.RemoteException;

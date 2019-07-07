@@ -9,7 +9,7 @@ import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class FileManager {
-    private SystemManager s;
+    private FacadeServer s;
     private static final String USERS_FILE = "utenti.bin";
     private static final String AUCTION_FILE = "auctions.bin";
     private static final String TIMERS_FILE = "timers.bin";
@@ -114,7 +114,7 @@ public class FileManager {
         }
     }
 
-    public FileManager(SystemManager s) {
+    public FileManager(FacadeServer s) {
         this.s = s;
     }
 }

@@ -3,7 +3,6 @@ package Server.Domain;
 import Server.People.User;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import java.io.File;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -21,10 +20,6 @@ public class Auction implements Serializable {
 
     @Column(name = "higheroffer")
     private int higherOffer;
-
-
-    @Transient
-    private File image;
 
     @OneToOne(mappedBy = "auL",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Lot lot;
@@ -47,11 +42,11 @@ public class Auction implements Serializable {
     @OneToOne(mappedBy = "auction",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private LifeCycleAuctionTaskDB timer;
 
-
+    @Transient
+    private File image;
 
     /**
      * Aggiunge offerta all'asta
-     * @param bid
      */
     public void addBid(Bid bid) {
         bidsList.add(bid);
@@ -61,7 +56,7 @@ public class Auction implements Serializable {
     public void addBidDB(Bid bid) {
         if(bid != null) {
             if(bidsList == null) {
-                bidsList = new ArrayList<Bid>();
+                bidsList = new ArrayList<>();
             }
             bidsList.add(bid);
             bid.setAu(this);
@@ -70,7 +65,6 @@ public class Auction implements Serializable {
 
     /**
      * Stampa informazioni su asta aperta
-     * @return
      */
     public String auctionInformation() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -86,7 +80,6 @@ public class Auction implements Serializable {
 
     /**
      * Stampa informazioni su asta chiusa
-     * @return
      */
     public String closedAuctionInformation() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -94,10 +87,6 @@ public class Auction implements Serializable {
         return "Id:"+ id + "\t" + "Current value:" + higherOffer + "\t" + lot.closedInformation() + "\n";
     }
 
-    /**
-     * Stampa informazioni su asta chiusa
-     * @return
-     */
     public String closedAuctionInfoDB() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         closingDate.format(formatter);
@@ -105,8 +94,7 @@ public class Auction implements Serializable {
     }
 
     /**
-     * Ottiene l'attuale Offerta piu' alta
-     * @return
+     * Ottiene l'attuale offerta piu' alta
      */
     public Bid getLastBid() {
         if(bidsList.size() != 0) {
@@ -116,20 +104,20 @@ public class Auction implements Serializable {
             return null;
     }
 
-    public void addFavourite(User a) {
-        userLike.add(a);
-    }
-
-    public void removeFavourite(User a) {
-        userLike.remove(a);
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Auction)
             return ((Auction)obj).getId()==this.id;
         else
             return false;
+    }
+
+    public void addFavourite(User a) {
+        userLike.add(a);
+    }
+
+    public void removeFavourite(User a) {
+        userLike.remove(a);
     }
 
     public int getId() { return id; }
@@ -156,21 +144,13 @@ public class Auction implements Serializable {
 
     public void setClosed(boolean closed) { this.closed = closed; }
 
-    public List<User> getPartecipantsList() {
-        return partecipantsList;
-    }
+    public List<User> getPartecipantsList() { return partecipantsList; }
 
-    public void setPartecipantsList(List<User> partecipantsList) {
-        this.partecipantsList = partecipantsList;
-    }
+    public void setPartecipantsList(List<User> partecipantsList) { this.partecipantsList = partecipantsList; }
 
-    public LifeCycleAuctionTaskDB getTimer() {
-        return timer;
-    }
+    public LifeCycleAuctionTaskDB getTimer() { return timer; }
 
-    public void setTimer(LifeCycleAuctionTaskDB timer) {
-        this.timer = timer;
-    }
+    public void setTimer(LifeCycleAuctionTaskDB timer) { this.timer = timer; }
 
     public File getImage() {
         return image;

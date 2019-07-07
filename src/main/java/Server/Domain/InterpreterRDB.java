@@ -17,8 +17,8 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 
-public class DBManager {
-    private SystemManager sys;
+public class InterpreterRDB {
+    private FacadeServer sys;
     private SessionFactory sessionFactory;
     private Session s;
 
@@ -603,7 +603,7 @@ public class DBManager {
 
 
 
-    public DBManager(SystemManager sys) {
+    public InterpreterRDB(FacadeServer sys) {
         this.sys = sys;
         this.sessionFactory = HibernateUtil.getSessionFactory();
     }
