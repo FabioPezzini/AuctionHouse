@@ -597,11 +597,9 @@ public class InterpreterRDB {
     }
 
 
+    public SessionFactory getSessionFactory() { return sessionFactory; }
 
-
-
-
-
+    public void setSessionFactory(SessionFactory sessionFactory) { this.sessionFactory = sessionFactory; }
 
     public InterpreterRDB(FacadeServer sys) {
         this.sys = sys;

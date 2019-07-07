@@ -55,7 +55,7 @@ public class Main extends Application {
      */
     private void initRootLayout() {
         try {
-            connection = new ConnectionLayer("hii");
+            connection = new ConnectionLayer("progettok19");
             c = new ClientManager(connection, connection.getServer());
 
             // Load root layout from fxml file.

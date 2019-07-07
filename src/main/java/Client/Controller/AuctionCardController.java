@@ -182,7 +182,7 @@ public class AuctionCardController {
 
     public String parseDate(LocalDateTime closingTime) {
 
-        return closingTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")).toString();
+        return closingTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
 
     @FXML
@@ -210,7 +210,7 @@ public class AuctionCardController {
     }
 
     @FXML
-    private void makeAnOffer() throws RemoteException {
+    private void makeAnOffer() {
         if(client.getLoggedUser().equals(auction.getLot().getVendorDB().getUsername())) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Offer");
@@ -273,7 +273,7 @@ public class AuctionCardController {
         }
         if (ms > SECOND) {
            second = ms / SECOND;
-            ms %= SECOND;
+           ms %= SECOND;
         }
     }
 

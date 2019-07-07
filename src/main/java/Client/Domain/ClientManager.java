@@ -6,6 +6,7 @@ import Server.People.Credentials.CharAnalizer;
 import Server.People.User;
 
 import java.io.File;
+import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -20,8 +21,6 @@ public class ClientManager {
      * Consente il logout solo se vi e' un utente loggato nel client, in caso di logout setta la stringa utente a null e non permette nessun'azione.
      * PER UNA MAGGIORE SICUREZZA SI POTREBBE INSERIRE UN ID GENERATO CASUALMENTE ED ASSEGNATO AD OGNI UTENTE OLTRE ALL'username, IN QUESTO MODO E' PIU DIFFICILE SPACCIARSI PER QUALCUN ALTRO
      * UN ULTERIORE LIVELLO DI SICUREZZA SI PUO' OTTENERE ASSEGNANDO UN NUOVO ID CASUALE AD OGNI NUOVO LOGIN.
-     *
-     *
      */
     private boolean logout() throws RemoteException {
         if (!(loggedUser == null)) {
@@ -38,14 +37,22 @@ public class ClientManager {
             return true;
         }
         return false;
+
     }
 
     public boolean logoutGUI() throws RemoteException {
-        if (!(loggedUser == null)) {
-            if (ad.logoutSDB(loggedUser)) {
-                loggedUser = null;
-                return true;
+        try {
+
+            if (!(loggedUser == null)) {
+                if (ad.logoutSDB(loggedUser)) {
+                    loggedUser = null;
+                    return true;
+                }
             }
+            return false;
+        } catch (ConnectException e) {
+            System.out.println("The Remote server isn't responding... the application will shut down");
+            System.exit(1);
         }
         return false;
     }
@@ -74,22 +81,26 @@ public class ClientManager {
     }
 
     public int signUpGUI(String username, String password) throws RemoteException {
-        if (validatePassword(password)) {
-            if (!ad.alredyTakenUsernameDB(username)) {
-                ad.createUserDB(username, password);
-                return 1; //Utente inserito con successo
+        try {
+
+            if (validatePassword(password)) {
+                if (!ad.alredyTakenUsernameDB(username)) {
+                    ad.createUserDB(username, password);
+                    return 1; //Utente inserito con successo
+                } else
+                    return 0; //Username gia' in uso
             } else
-                return 0; //Username gia' in uso
-        }
-        else
-            return -1; //Password non valida
+                return -1; //Password non valida
+        } catch (ConnectException e) {
+        System.out.println("The Remote server isn't responding... the application will shut down");
+        System.exit(1);
+    }
+        return -1;
 
     }
 
     /**
      * Effettua il login, solo se l'utente e' registrato e se non vi e' gia' qualcuno connesso con lo stesso account
-     *
-     *
      */
     private boolean login() throws RemoteException {
         if (loggedUser == null) {
@@ -114,17 +125,25 @@ public class ClientManager {
     }
 
     public int loginGUI(String username, String password) throws RemoteException {
-        if (loggedUser == null) {
-            if (ad.checkLoginDB(username, password)) {
-                loggedUser = username;
-                return 1; //Login effettuato con successo
+        try {
+            if (loggedUser == null) {
+                if (ad.checkLoginDB(username, password)) {
+                    loggedUser = username;
+                    return 1; //Login effettuato con successo
+                } else {
+                    return 0; //Dati inseriti errati
+                }
             } else {
-                return 0; //Dati inseriti errati
+                return -1; //Qualcuno e' gia' loggato
             }
-        } else {
-            return -1; //Qualcuno e' gia' loggato
+        } catch (ConnectException e) {
+            System.out.println("The Remote server isn't responding... the application will shut down");
+            System.exit(1);
         }
+        return -1;
     }
+
+
 
 
     /**
@@ -171,12 +190,18 @@ public class ClientManager {
     }
 
     public int createAuctionGUI(String name,String description,int basePrice,LocalDateTime close) throws RemoteException {
-        if(!close.isBefore(ad.currentiTime()) && !close.isEqual(ad.currentiTime())) {
-            ad.addAuctionDB(name,basePrice,loggedUser,close);
-            return 1;
+        try {
+
+            if (!close.isBefore(ad.currentiTime()) && !close.isEqual(ad.currentiTime())) {
+                ad.addAuctionDB(name, basePrice, loggedUser, close);
+                return 1;
+            } else
+                return 0;
+        } catch (ConnectException e) {
+            System.out.println("The Remote server isn't responding... the application will shut down");
+            System.exit(1);
         }
-        else
-            return 0;
+        return 0;
     }
 
 
@@ -212,7 +237,13 @@ public class ClientManager {
     }
 
     public boolean makeBid(String user,int amout, int id) throws RemoteException{
-        return ad.makeBidDB(user,amout,id);
+        try {
+            return ad.makeBidDB(user,amout,id);
+        } catch (ConnectException e) {
+            System.out.println("The Remote server isn't responding... the application will shut down");
+            System.exit(1);
+        }
+        return false;
     }
 
     /**

@@ -19,7 +19,7 @@ public class ConnectionLayer {
 
     /**
      * Basic constructor that only requires a connection string
-     * @param connectionServer
+     *
      */
     public ConnectionLayer(String connectionServer) {
         this.connectionStr = connectionServer;
@@ -29,8 +29,7 @@ public class ConnectionLayer {
 
     /**
      * The period parameter is passed to the FailureDetector, determines how often to retry in case connection breaks
-     * @param connectionStr
-     * @param period
+     *
      */
     public ConnectionLayer(String connectionStr, long period) {
         this.connectionStr = connectionStr;
@@ -40,6 +39,7 @@ public class ConnectionLayer {
 
     /**
      * Metodo che apre la connessione al Server, cambiare indirizzo host per connettersi fuori dalla LAN
+     *
      */
     private void connect() {
             try {

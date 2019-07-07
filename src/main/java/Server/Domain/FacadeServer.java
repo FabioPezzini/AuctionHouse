@@ -7,7 +7,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -26,6 +29,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
     private transient Timer timer;
     private FileManager files;
     private InterpreterRDB db;
+    Registry reg = null;
 
 
     public void createUser(String username, String password){
@@ -207,7 +211,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
         }
     }
 
-    public void saveTimerStats() {
+    private void saveTimerStats() {
         db.saveTimer(this.timerTasksDB);
 
     }
@@ -241,6 +245,25 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
 
             }
         db.deleteTimer();
+    }
+
+    public void closeServer() throws RemoteException {
+        try {
+            saveTimerStats();
+            db.getSessionFactory().close();
+            reg.unbind("progettok19");
+            UnicastRemoteObject.unexportObject(this,true);
+
+
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void init() throws RemoteException {
+        reg = LocateRegistry.createRegistry(999);
+
+        reg.rebind("progettok19", this);
     }
 
     public ArrayList<Auction> myAuctionList(String username) { return db.myAuctionList(username); }
