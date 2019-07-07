@@ -10,6 +10,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.effect.BoxBlur;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -35,6 +37,10 @@ public class LoginController {
 
     @FXML
     private JFXButton signUp;
+
+    @FXML
+    private AnchorPane windowsPane;
+
 
 
     @FXML
@@ -86,6 +92,7 @@ public class LoginController {
 
     @FXML
     private void changeSceneSignUp() throws IOException {
+        BoxBlur blur = new BoxBlur(5,5,5);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/Client/Controller/SignUp.fxml"));
         Parent signup = (Parent) loader.load();
@@ -112,11 +119,14 @@ public class LoginController {
 
         popUpStageSignUp.show();
 
+        windowsPane.setEffect(blur);
+
         new FadeIn(signup).play();
 
 
         signupController = (SignUpController) loader.getController();
         signupController.setPopUpStage(popUpStageSignUp);
+        signupController.setPrimaryStage(primaryStage);
         signupController.setClient(client);
 
     }
