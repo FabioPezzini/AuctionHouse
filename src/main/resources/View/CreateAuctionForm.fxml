@@ -22,21 +22,21 @@
       <JFXTimePicker fx:id="closeTime" layoutX="119.0" layoutY="207.0" prefHeight="25.0" prefWidth="188.0" />
       <JFXDatePicker fx:id="closeDate" layoutX="119.0" layoutY="159.0" prefHeight="25.0" prefWidth="188.0" />
       <Label layoutX="33.0" layoutY="211.0" text="Ora Chiusura" />
-      <JFXButton fx:id="loadImage" layoutX="157.0" layoutY="282.0" onAction="#loadImageAction" prefHeight="25.0" prefWidth="81.0" style="-fx-background-color: #757575; -fx-background-radius: 100;" text="ClickMe" textFill="WHITE" />
+      <JFXButton fx:id="loadImage" onMouseEntered="#handleCursorHand" onMouseExited="#handleCursor" layoutX="157.0" layoutY="282.0" onAction="#loadImageAction" prefHeight="25.0" prefWidth="81.0" style="-fx-background-color: #757575; -fx-background-radius: 100;" text="ClickMe" textFill="WHITE" />
       <Label layoutX="30.0" layoutY="286.0" text="Carica Immagine" />
-      <JFXButton fx:id="createAuction" layoutX="226.0" layoutY="338.0" onAction="#createAuctionAction" prefHeight="39.0" prefWidth="170.0" style="-fx-background-color: #4caf50; -fx-background-radius: 100;" text="CARICA ASTA" textFill="WHITE">
+      <JFXButton fx:id="createAuction" onMouseEntered="#handleCursorHand" onMouseExited="#handleCursor" layoutX="226.0" layoutY="338.0" onAction="#createAuctionAction" prefHeight="39.0" prefWidth="170.0" style="-fx-background-color: #4caf50; -fx-background-radius: 100;" text="CARICA ASTA" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>
       </JFXButton>
       <JFXListView fx:id="listview" layoutX="297.0" layoutY="275.0" prefHeight="39.0" prefWidth="238.0" />
       <FontAwesomeIconView glyphName="ANGLE_LEFT" layoutX="6.0" layoutY="24.0" onMouseClicked="#backToHome" size="30" wrappingWidth="40.0" />
-      <JFXButton fx:id="deleteAuction" layoutX="413.0" layoutY="338.0" onAction="#closeAuction" prefHeight="39.0" prefWidth="170.0" style="-fx-background-color: FF0000; -fx-background-radius: 100;" text="CANCELLA ASTA" textFill="WHITE">
+      <JFXButton fx:id="deleteAuction" onMouseEntered="#handleCursorHand" onMouseExited="#handleCursor" layoutX="413.0" layoutY="338.0" onAction="#closeAuction" prefHeight="39.0" prefWidth="170.0" style="-fx-background-color: FF0000; -fx-background-radius: 100;" text="CANCELLA ASTA" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>
       </JFXButton>
-      <JFXButton fx:id="modifyAuction" layoutX="13.0" layoutY="338.0" onAction="#modifyAuction" prefHeight="39.0" prefWidth="188.0" style="-fx-background-color: #4caf50; -fx-background-radius: 100;" text="SALVA MODIFICHE" textFill="WHITE">
+      <JFXButton fx:id="modifyAuction" onMouseEntered="#handleCursorHand" onMouseExited="#handleCursor" layoutX="13.0" layoutY="338.0" onAction="#modifyAuction" prefHeight="39.0" prefWidth="188.0" style="-fx-background-color: #4caf50; -fx-background-radius: 100;" text="SALVA MODIFICHE" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>

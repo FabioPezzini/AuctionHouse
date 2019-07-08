@@ -1,7 +1,6 @@
 # AuctionHouse
 To Do:
 - Fare reload automatico quando crei asta
-- Controllare correttezza reload timer
 - Aggiungere possibilita' modifica pass
 
 

@@ -46,7 +46,6 @@ public class AuctionDBTimerStrategy extends TimerTask implements Serializable,St
     public void run() {
         synchronized(this) {
             if (!dbManager.isClosed(id)) {
-                System.out.println(id);
                 // Move auction to closed
                 dbManager.winner(id);
                 dbManager.closeAuction(id);

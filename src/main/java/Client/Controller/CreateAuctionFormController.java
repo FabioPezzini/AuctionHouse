@@ -5,10 +5,12 @@ import Server.Domain.Auction;
 import com.jfoenix.controls.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -166,6 +168,17 @@ public class CreateAuctionFormController {
             primaryStage.close();
         }
 
+    }
+
+
+    @FXML
+    public void handleCursorHand(MouseEvent me) {
+        primaryStage.getScene().setCursor(Cursor.HAND);
+    }
+
+    @FXML
+    public void handleCursor(MouseEvent me) {
+        primaryStage.getScene().setCursor(Cursor.DEFAULT);
     }
 
 

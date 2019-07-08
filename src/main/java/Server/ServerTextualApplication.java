@@ -32,6 +32,9 @@ public class ServerTextualApplication {
                     sys.saveState();
                     break;
                 case 3:
+                    for(int i=0 ; i < sys.getTimerTasksDB().size() ;i++) {
+                        System.out.println(sys.getTimerTasksDB().get(i).getId() + "\t\t" + sys.getTimerTasksDB().get(i).getCloseMillis());
+                    }
                     sys.closeServer();
                     System.out.println("Sto spegnendo il server...");
                     System.exit(0);

@@ -100,14 +100,16 @@ public class SignUpController {
     }
 
     public void setClient(ClientManager client) {
+        this.client = client;
+    }
+
+    public void initializeWindow() {
         popUpStage.getScene().setFill(Color.TRANSPARENT);
         windowsPane.setStyle(
 
                 "-fx-background-insets: 5; " +
-                "-fx-background-radius: 10; " +
-                "-fx-effect: dropshadow(three-pass-box, black, 10, 0, 0, 0);"
+                        "-fx-background-radius: 10; " +
+                        "-fx-effect: dropshadow(three-pass-box, black, 10, 0, 0, 0);"
         );
-        this.client = client;
-
     }
 }

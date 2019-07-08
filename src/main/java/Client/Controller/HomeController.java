@@ -10,9 +10,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.effect.BoxBlur;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
 import javafx.stage.Modality;
@@ -121,6 +123,15 @@ public class HomeController {
         new Pulse(search).setSpeed(2).play();
     }
 
+    @FXML
+    public void handleCursorHand(MouseEvent me) {
+        primaryStage.getScene().setCursor(Cursor.HAND);
+    }
+
+    @FXML
+    public void handleCursor(MouseEvent me) {
+        primaryStage.getScene().setCursor(Cursor.DEFAULT);
+    }
 
 
     public void setPrimaryStage(Stage primaryStage) {

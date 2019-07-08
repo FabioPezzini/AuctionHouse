@@ -29,7 +29,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
     private transient Timer timer;
     private FileManager files;
     private InterpreterRDB db;
-    Registry reg = null;
+    private Registry reg = null;
 
 
     public void createUser(String username, String password){
@@ -132,6 +132,8 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
         db.closeAuction(id);
     }
 
+    public boolean isClosed(int id) { return db.isClosed(id);}
+
 
 
 
@@ -220,13 +222,20 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
     }
 
     private void saveTimerStats() {
-        db.saveTimer(this.timerTasksDB);
+        db.saveTimer(timerTasksDB);
 
     }
 
     public void refreshTimerStats() {
         HashMap<Integer, BigInteger> timerValue = new HashMap<>();
         timerValue = db.reloadTimer();
+
+        for (Map.Entry<Integer, BigInteger> entry : timerValue.entrySet()) {
+            AuctionDBTimerStrategy t = new AuctionDBTimerStrategy(db.getAuction(entry.getKey()),entry.getValue().longValue());
+            t.passArgument(timerTasksDB,db);
+            timer.schedule(t, (entry.getValue().longValue() - System.currentTimeMillis()));
+            timerTasksDB.add(t);
+        }
 
         for(Map.Entry<Integer, BigInteger> entry : timerValue.entrySet()) {
             Integer key = entry.getKey();

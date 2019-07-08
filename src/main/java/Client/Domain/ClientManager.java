@@ -212,6 +212,8 @@ public class ClientManager {
         ad.closeAuction(id);
     }
 
+    public boolean isClosed(int id) throws RemoteException {return ad.isClosed(id); }
+
 
 
     /**

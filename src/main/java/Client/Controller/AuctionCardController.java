@@ -14,6 +14,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -22,7 +23,9 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -285,46 +288,67 @@ public class AuctionCardController {
     }
 
     @FXML
-    private void makeAnOffer() {
-        if(client.getLoggedUser().equals(auction.getLot().getVendorDB().getUsername())) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error Offer");
-            alert.setHeaderText("Error ");
-            alert.setContentText("Il creatore dell'asta non puo' fare offerte sulla stessa");
-            alert.initOwner(popUpStage);
+    private void makeAnOffer() throws RemoteException {
+        if(!client.isClosed(auction.getId())) {
+            if (client.getLoggedUser().equals(auction.getLot().getVendorDB().getUsername())) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Offer");
+                alert.setHeaderText("Error ");
+                alert.setContentText("Il creatore dell'asta non puo' fare offerte sulla stessa");
+                alert.initOwner(popUpStage);
 
-            alert.showAndWait();
-        }
-        else {
-            TextInputDialog dialog = new TextInputDialog();
-            dialog.setTitle("Offer Dialog");
-            dialog.setHeaderText("Higher Offer:" + auction.getHigherOffer());
-            dialog.setContentText("Your Offer:");
+                alert.showAndWait();
+            } else {
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setTitle("Offer Dialog");
+                dialog.setHeaderText("Higher Offer:" + auction.getHigherOffer());
+                dialog.setContentText("Your Offer:");
 
-            Optional<String> input = dialog.showAndWait();
-            input.ifPresent(offer -> {
-                int offerInt;
-                try {
-                    offerInt = Integer.parseInt(offer);
-                    if(client.makeBid(client.getLoggedUser(),offerInt,auction.getId())) {
-                        auction = client.getAuction(auction.getId());
-                        initializeNow();
+                Optional<String> input = dialog.showAndWait();
+                input.ifPresent(offer -> {
+                    int offerInt;
+                    try {
+                        offerInt = Integer.parseInt(offer);
+                        if (client.makeBid(client.getLoggedUser(), offerInt, auction.getId())) {
+                            auction = client.getAuction(auction.getId());
+                            initializeNow();
+                        } else {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Error Offer");
+                            alert.setHeaderText("Error ");
+                            alert.setContentText("L'offerta e' stata superata, ricarica");
+
+                            alert.showAndWait();
+                        }
+                    } catch (NumberFormatException e) {
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
                     }
-                    else {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Error Offer");
-                        alert.setHeaderText("Error ");
-                        alert.setContentText("L'offeta e' stata superata, ricarica");
-
-                        alert.showAndWait();
-                    }
-                }catch (NumberFormatException e) {
-                }catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-            });
+                });
+            }
         }
     }
+
+    public void initializeWindow() {
+        popUpStage.getScene().setFill(Color.TRANSPARENT);
+        windowsPane.setStyle(
+
+                "-fx-background-insets: 5; " +
+                        "-fx-background-radius: 10; " +
+                        "-fx-effect: dropshadow(three-pass-box, black, 10, 0, 0, 0);"
+        );
+    }
+
+    @FXML
+    public void handleCursorHand(MouseEvent me) {
+        popUpStage.getScene().setCursor(Cursor.HAND);
+    }
+
+    @FXML
+    public void handleCursor(MouseEvent me) {
+        popUpStage.getScene().setCursor(Cursor.DEFAULT);
+    }
+
 
     public void countMilliToDay(Long ms) {
         final int SECOND = 1000;
