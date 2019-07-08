@@ -210,7 +210,7 @@ public class AuctionCardController {
     public void modifyAuction() throws IOException {
         BoxBlur blur = new BoxBlur(3,3,3);
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/Client/Controller/CreateAuctionForm.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/CreateAuctionForm.fxml"));
         Parent root = (Parent) loader.load();
 
         Stage modifyStage = new Stage(StageStyle.TRANSPARENT);

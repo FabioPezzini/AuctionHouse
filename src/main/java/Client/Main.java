@@ -60,7 +60,7 @@ public class Main extends Application {
 
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/main/java/Client/Controller/Login.fxml"));
+            loader.setLocation(getClass().getResource("/View/Login.fxml"));
             rootLayout = loader.load();
 
             // Show the scene containing the root layout.

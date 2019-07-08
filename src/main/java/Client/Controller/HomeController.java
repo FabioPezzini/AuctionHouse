@@ -58,7 +58,7 @@ public class HomeController {
     public void createAuctionAction(ActionEvent event) throws IOException {
         BoxBlur blur = new BoxBlur(3,3,3);
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/Client/Controller/CreateAuctionForm.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/CreateAuctionForm.fxml"));
         Parent root = (Parent) loader.load();
 
         Stage popUpStage = new Stage(StageStyle.TRANSPARENT);
@@ -144,7 +144,7 @@ public class HomeController {
 
         try {
             fxml = new FXMLLoader();
-            fxml.setLocation(getClass().getResource("/main/java/Client/Controller/Title.fxml"));
+            fxml.setLocation(getClass().getResource("/View/Title.fxml"));
             root = (Parent)fxml.load();
         } catch (IOException e) {
             e.printStackTrace();
@@ -164,7 +164,7 @@ public class HomeController {
 
         try {
             fxml = new FXMLLoader();
-            fxml.setLocation(getClass().getResource("/main/java/Client/Controller/AuctionList.fxml"));
+            fxml.setLocation(getClass().getResource("/View/AuctionList.fxml"));
             root = (Parent)fxml.load();
         } catch (IOException e) {
             e.printStackTrace();
@@ -174,7 +174,7 @@ public class HomeController {
         auctionListController = (AuctionListController) fxml.getController();
 
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/Client/Controller/CreateAuctionForm.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/CreateAuctionForm.fxml"));
 
         auctionListController.setPrimaryStage(primaryStage);
         auctionListController.setClient(client);

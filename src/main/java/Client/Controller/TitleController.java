@@ -46,7 +46,7 @@ public class TitleController {
     private void handleLogout(){
         try {
             if (client.logoutGUI()) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/Client/Controller/Login.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Login.fxml"));
                 AnchorPane root = loader.load();
 
                 Scene scene = new Scene(root);

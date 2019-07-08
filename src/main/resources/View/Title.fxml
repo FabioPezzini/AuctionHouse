@@ -12,7 +12,7 @@
    <JFXButton fx:id="favoriteButton" layoutX="125.0" layoutY="24.0" onAction="#viewFavorites" onMouseEntered="#handleCursorHand" onMouseExited="#handleCursor" prefHeight="31.0" prefWidth="86.0" style="-fx-background-radius: 100; -fx-background-color: #c8e6c9;" text="Favorites" />
    <ImageView fitHeight="68.0" fitWidth="278.0" pickOnBounds="true" preserveRatio="true">
       <image>
-         <Image url="@../../../resources/Images/D2.png" />
+         <Image url="@../Images/D2.png" />
       </image>
    </ImageView>
 </AnchorPane>

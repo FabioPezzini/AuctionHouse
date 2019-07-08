@@ -173,7 +173,7 @@ public class AuctionListController {
 
     @FXML
     public void chooseAuction() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/Client/Controller/AuctionCard.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/AuctionCard.fxml"));
         Parent root = (Parent) loader.load();
 
         Stage popUpStage = new Stage(StageStyle.TRANSPARENT);

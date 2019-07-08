@@ -59,7 +59,7 @@ public class LoginController {
 
             alert.showAndWait();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/Client/Controller/Home.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Home.fxml"));
             Parent home = (Parent) loader.load();
 
             homeController = (HomeController)loader.getController();
@@ -94,7 +94,7 @@ public class LoginController {
     private void changeSceneSignUp() throws IOException {
         BoxBlur blur = new BoxBlur(5,5,5);
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/Client/Controller/SignUp.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/SignUp.fxml"));
         Parent signup = (Parent) loader.load();
 
         Stage popUpStageSignUp = new Stage(StageStyle.TRANSPARENT);
