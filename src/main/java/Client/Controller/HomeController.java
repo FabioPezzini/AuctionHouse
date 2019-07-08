@@ -51,6 +51,8 @@ public class HomeController {
 
     private HomeController homeController;
 
+    private CreateAuctionFormController auctionFormController;
+
 
     @FXML
     public void createAuctionAction(ActionEvent event) throws IOException {
@@ -88,9 +90,13 @@ public class HomeController {
         new FadeIn(root).play();
 
 
-        ((CreateAuctionFormController)loader.getController()).setClient(client);
-        ((CreateAuctionFormController)loader.getController()).setPopUpStage(popUpStage);
-        ((CreateAuctionFormController)loader.getController()).setPrimaryStage(primaryStage);
+        auctionFormController = (CreateAuctionFormController) loader.getController();
+
+        auctionFormController.setClient(client);
+        auctionFormController.setPopUpStage(popUpStage);
+        auctionFormController.setPrimaryStage(primaryStage);
+        auctionFormController.disableModifyDeleteAuction();
+
     }
 
     @FXML
@@ -167,9 +173,13 @@ public class HomeController {
 
         auctionListController = (AuctionListController) fxml.getController();
 
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/Client/Controller/CreateAuctionForm.fxml"));
+
         auctionListController.setPrimaryStage(primaryStage);
         auctionListController.setClient(client);
         auctionListController.setAuctionListController(auctionListController);
+        auctionListController.setAuctionFormController((CreateAuctionFormController) loader.getController());
     }
 
     public TitleController getTitleController() {

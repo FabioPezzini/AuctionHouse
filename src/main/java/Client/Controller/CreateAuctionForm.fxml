@@ -13,26 +13,33 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.Controller.CreateAuctionFormController">
    <children>
-      <Label layoutX="26.0" layoutY="29.0" text="Nome Oggetto" />
-      <Label layoutX="37.0" layoutY="76.0" text="Descrizione" />
-      <Label layoutX="36.0" layoutY="122.0" text="Prezzo Base" />
-      <Label layoutX="30.0" layoutY="171.0" text="Data Chiusura" />
-      <ImageView fitHeight="203.0" fitWidth="247.0" layoutX="336.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fitHeight="91.0" fitWidth="96.0" layoutX="320.0" layoutY="219.0" pickOnBounds="true" preserveRatio="true" />
-      <JFXTextField fx:id="itemName" layoutX="123.0" layoutY="25.0" prefHeight="25.0" prefWidth="149.0" />
-      <JFXTextField fx:id="description" layoutX="123.0" layoutY="72.0" prefHeight="25.0" prefWidth="149.0" />
-      <JFXTextField fx:id="basePrice" layoutX="123.0" layoutY="118.0" prefHeight="25.0" prefWidth="149.0" />
-      <JFXTimePicker fx:id="closeTime" layoutX="123.0" layoutY="219.0" prefHeight="25.0" prefWidth="188.0" />
-      <JFXDatePicker fx:id="closeDate" layoutX="123.0" layoutY="167.0" prefHeight="25.0" prefWidth="188.0" />
-      <Label layoutX="33.0" layoutY="223.0" text="Ora Chiusura" />
+      <Label layoutX="26.0" layoutY="60.0" text="Nome Oggetto" />
+      <Label layoutX="35.0" layoutY="111.0" text="Prezzo Base" />
+      <Label layoutX="29.0" layoutY="163.0" text="Data Chiusura" />
+      <ImageView fx:id="imageView" fitHeight="203.0" fitWidth="247.0" layoutX="336.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true" />
+      <JFXTextField fx:id="itemName" layoutX="119.0" layoutY="56.0" prefHeight="25.0" prefWidth="149.0" />
+      <JFXTextField fx:id="basePrice" layoutX="119.0" layoutY="107.0" prefHeight="25.0" prefWidth="149.0" />
+      <JFXTimePicker fx:id="closeTime" layoutX="119.0" layoutY="207.0" prefHeight="25.0" prefWidth="188.0" />
+      <JFXDatePicker fx:id="closeDate" layoutX="119.0" layoutY="159.0" prefHeight="25.0" prefWidth="188.0" />
+      <Label layoutX="33.0" layoutY="211.0" text="Ora Chiusura" />
       <JFXButton fx:id="loadImage" layoutX="157.0" layoutY="282.0" onAction="#loadImageAction" prefHeight="25.0" prefWidth="81.0" style="-fx-background-color: #757575; -fx-background-radius: 100;" text="ClickMe" textFill="WHITE" />
       <Label layoutX="30.0" layoutY="286.0" text="Carica Immagine" />
-      <JFXButton fx:id="createAuction" layoutX="226.0" layoutY="338.0" onAction="#createAuctionAction" prefHeight="39.0" prefWidth="170.0" style="-fx-background-color: #4caf50; -fx-background-radius: 100;" text="Carica l'Asta" textFill="WHITE">
+      <JFXButton fx:id="createAuction" layoutX="226.0" layoutY="338.0" onAction="#createAuctionAction" prefHeight="39.0" prefWidth="170.0" style="-fx-background-color: #4caf50; -fx-background-radius: 100;" text="CARICA ASTA" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>
       </JFXButton>
       <JFXListView fx:id="listview" layoutX="297.0" layoutY="275.0" prefHeight="39.0" prefWidth="238.0" />
       <FontAwesomeIconView glyphName="ANGLE_LEFT" layoutX="6.0" layoutY="24.0" onMouseClicked="#backToHome" size="30" wrappingWidth="40.0" />
+      <JFXButton fx:id="deleteAuction" layoutX="413.0" layoutY="338.0" onAction="#closeAuction" prefHeight="39.0" prefWidth="170.0" style="-fx-background-color: FF0000; -fx-background-radius: 100;" text="CANCELLA ASTA" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </JFXButton>
+      <JFXButton fx:id="modifyAuction" layoutX="13.0" layoutY="338.0" onAction="#modifyAuction" prefHeight="39.0" prefWidth="188.0" style="-fx-background-color: #4caf50; -fx-background-radius: 100;" text="SALVA MODIFICHE" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </JFXButton>
    </children>
 </AnchorPane>

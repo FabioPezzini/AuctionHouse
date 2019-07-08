@@ -21,7 +21,7 @@
          <children>
             <JFXTextField fx:id="username" layoutX="32.0" layoutY="106.0" prefHeight="31.0" prefWidth="196.0" promptText="Username" />
             <JFXPasswordField fx:id="password" layoutX="32.0" layoutY="174.0" prefHeight="31.0" prefWidth="196.0" promptText="Password" />
-            <JFXButton fx:id="signIn" layoutX="68.0" layoutY="263.0" onAction="#handleSignIn" prefHeight="31.0" prefWidth="123.0" style="-fx-background-radius: 100; -fx-background-color: #c8e6c9;" text="Sign in" />
+            <JFXButton fx:id="signIn" layoutX="69.0" layoutY="236.0" onAction="#handleSignIn" prefHeight="31.0" prefWidth="123.0" style="-fx-background-radius: 100; -fx-background-color: #c8e6c9;" text="Sign in" />
             <Label layoutX="98.0" layoutY="31.0" text="Sign In" textFill="WHITE">
                <font>
                   <Font size="21.0" />

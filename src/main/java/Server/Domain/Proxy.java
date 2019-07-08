@@ -65,4 +65,9 @@ public interface Proxy extends Remote {
     ArrayList<Auction> searchAuctionList(String textToSearch) throws RemoteException;
 
     ArrayList<Auction> myAuctionList(String username) throws RemoteException;
+
+    void modifyAuctionDB(String title, int price, int id) throws RemoteException;
+
+    void closeAuction(int id) throws RemoteException;
+
 }

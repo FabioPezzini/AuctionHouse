@@ -46,6 +46,8 @@ public class AuctionListController {
 
     private AuctionListController auctionListController;
 
+    private CreateAuctionFormController auctionFormController;
+
 
 
     public void initializeList(int typeOfSearch, String toSearch) {
@@ -201,6 +203,8 @@ public class AuctionListController {
         ((AuctionCardController)loader.getController()).setAuction(client.getAuction(idChoose));
 
         ((AuctionCardController)loader.getController()).setClient(client);
+        ((AuctionCardController)loader.getController()).setAuctionFormController(auctionFormController);
+
     }
 
 
@@ -227,5 +231,13 @@ public class AuctionListController {
 
     public void setAuctionListController(AuctionListController auctionListController) {
         this.auctionListController = auctionListController;
+    }
+
+    public CreateAuctionFormController getAuctionFormController() {
+        return auctionFormController;
+    }
+
+    public void setAuctionFormController(CreateAuctionFormController auctionFormController) {
+        this.auctionFormController = auctionFormController;
     }
 }

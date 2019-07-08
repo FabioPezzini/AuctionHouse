@@ -12,7 +12,7 @@ public class Lot implements Serializable {
     @Column(name = "title", nullable = false)
     private String description;
 
-    @Column(name = "baseprice", updatable = false, nullable = false)
+    @Column(name = "baseprice", nullable = false)
     private int basePrice;
 
     @OneToOne(fetch = FetchType.LAZY)

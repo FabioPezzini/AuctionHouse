@@ -124,6 +124,14 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
         timerTasksDB.add(t);
     }
 
+    public synchronized void modifyAuctionDB(String title, int price, int id) {
+        db.modifyAuction(title,price,id);
+    }
+
+    public synchronized void closeAuction(int id) {
+        db.closeAuction(id);
+    }
+
 
 
 

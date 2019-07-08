@@ -189,7 +189,7 @@ public class ClientManager {
         }
     }
 
-    public int createAuctionGUI(String name,String description,int basePrice,LocalDateTime close) throws RemoteException {
+    public int createAuctionGUI(String name,int basePrice,LocalDateTime close) throws RemoteException {
         try {
 
             if (!close.isBefore(ad.currentiTime()) && !close.isEqual(ad.currentiTime())) {
@@ -202,6 +202,14 @@ public class ClientManager {
             System.exit(1);
         }
         return 0;
+    }
+
+    public void modifyAuctio(String title,int price, int id) throws RemoteException {
+        ad.modifyAuctionDB(title,price,id);
+    }
+
+    public void closeAuction(int id) throws RemoteException {
+        ad.closeAuction(id);
     }
 
 
