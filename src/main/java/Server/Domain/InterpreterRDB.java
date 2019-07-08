@@ -8,7 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
-import Server.services.DBConnection.HibernateUtil;
+import Server.Services.HibernateUtil;
 
 import java.io.File;
 import java.math.BigInteger;
@@ -363,7 +363,7 @@ public class InterpreterRDB {
 
             for (int i = 0; i < list.size() && i <= 9; i++) {
                 Auction a = list.get(i);
-                File image = new File("src\\main\\java\\Server\\services\\AuctionImages\\" + a.getId() + ".png");
+                File image = new File("src\\main\\java\\Server\\Services\\AuctionImages\\" + a.getId() + ".png");
                 a.setImage(image);
 
                 Alist.add(a);
@@ -389,7 +389,7 @@ public class InterpreterRDB {
 
             for (int i = 0; i < list.size(); i++) {
                 Auction a = list.get(i);
-                File image = new File("src\\main\\java\\Server\\services\\AuctionImages\\" + a.getId() + ".png");
+                File image = new File("src\\main\\java\\Server\\Services\\AuctionImages\\" + a.getId() + ".png");
                 a.setImage(image);
                 String title = a.getLot().getDescription().toLowerCase();
 
@@ -425,7 +425,7 @@ public class InterpreterRDB {
 
             for (int i = 0; i < list.size(); i++) {
                 Auction a = list.get(i);
-                File image = new File("src\\main\\java\\Server\\services\\AuctionImages\\" + a.getId() + ".png");
+                File image = new File("src\\main\\java\\Server\\Services\\AuctionImages\\" + a.getId() + ".png");
                 a.setImage(image);
                 Alist.add(a);
             }
@@ -454,7 +454,7 @@ public class InterpreterRDB {
             for (int i = 0; i < list.size() && i <= 9; i++) {
                 Auction a = list.get(i);
                 if(a.getLot().getVendorDB().equals(user) || user.getPartecipantAuction().contains(a)) {
-                    File image = new File("src\\main\\java\\Server\\services\\AuctionImages\\" + a.getId() + ".png");
+                    File image = new File("src\\main\\java\\Server\\Services\\AuctionImages\\" + a.getId() + ".png");
                     a.setImage(image);
 
                     Alist.add(a);
@@ -477,7 +477,7 @@ public class InterpreterRDB {
             Query query = s.createQuery(sql);
             query.setParameter("id",id);
             Auction a = (Auction)query.getSingleResult();
-            File image = new File("src\\main\\java\\Server\\services\\AuctionImages\\" + a.getId() + ".png");
+            File image = new File("src\\main\\java\\Server\\Services\\AuctionImages\\" + a.getId() + ".png");
             if(image.exists())
                 a.setImage(image);
             return a;

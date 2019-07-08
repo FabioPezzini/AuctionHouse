@@ -208,7 +208,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
 
     public synchronized void saveAuctionImage(File image) {
         auctionIdCounter = db.idOfAuction();
-        String pathSave = "src\\main\\java\\Server\\services\\AuctionImages\\" + auctionIdCounter + ".png";
+        String pathSave = "src\\main\\resources\\AuctionImages\\" + auctionIdCounter + ".png";
 
         try {
             BufferedImage bi = ImageIO.read(image);
