@@ -49,6 +49,8 @@ public class AuctionListController {
 
     private CreateAuctionFormController auctionFormController;
 
+    private TitleController titleController;
+
 
 
     public void initializeList(int typeOfSearch, String toSearch) {
@@ -200,20 +202,25 @@ public class AuctionListController {
 
 
         ((AuctionCardController)loader.getController()).setPopUpStage(popUpStage);
-        int idChoose = auctionList.getSelectionModel().getSelectedItem().getId();
+        try {
 
-        if(!client.isClosed(idChoose)) {
-            ((AuctionCardController) loader.getController()).setAuction(client.getAuction(idChoose));
-            ((AuctionCardController) loader.getController()).setClient(client);
-            ((AuctionCardController) loader.getController()).setAuctionFormController(auctionFormController);
-            ((AuctionCardController) loader.getController()).initializeWindow();
-            popUpStage.show();
 
+            int idChoose = auctionList.getSelectionModel().getSelectedItem().getId();
+
+            if (!client.isClosed(idChoose) || titleController.getMyAuction().isDisable() || titleController.getFavoriteButton().isDisable()) {
+                ((AuctionCardController) loader.getController()).setAuction(client.getAuction(idChoose));
+                ((AuctionCardController) loader.getController()).setClient(client);
+                ((AuctionCardController) loader.getController()).setAuctionFormController(auctionFormController);
+                ((AuctionCardController) loader.getController()).initializeWindow();
+                popUpStage.show();
+
+            }
+            else {
+                initializeList(0, null);
+            }
+        }catch (NullPointerException e) {
+            initializeList(0, null);
         }
-        else {
-            initializeList(0,null);
-        }
-
 
     }
 
@@ -249,5 +256,13 @@ public class AuctionListController {
 
     public void setAuctionFormController(CreateAuctionFormController auctionFormController) {
         this.auctionFormController = auctionFormController;
+    }
+
+    public TitleController getTitleController() {
+        return titleController;
+    }
+
+    public void setTitleController(TitleController titleController) {
+        this.titleController = titleController;
     }
 }

@@ -472,7 +472,7 @@ public class InterpreterRDB {
 
     Auction getAuction(int id) {
         s = sessionFactory.openSession();
-        String sql = "FROM Auction where closed=false AND id=:id";
+        String sql = "FROM Auction where id=:id";
         try {
             Query query = s.createQuery(sql);
             query.setParameter("id",id);

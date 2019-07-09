@@ -5,6 +5,7 @@ import animatefx.animation.*;
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -13,6 +14,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class TitleController {
     private ClientManager client;
@@ -67,12 +70,15 @@ public class TitleController {
         }
     }
 
+
+
     @FXML
     private void viewFavorites() {
         try {
             setVisibleButtons();
 
             auctionListController.loadFavorite();
+            //auctionListController.setTitleController(this);
             new BounceOut(favoriteButton).play();
             favoriteButton.setDisable(true);
 
@@ -89,6 +95,7 @@ public class TitleController {
             new BounceOut(myAuction).play();
             myAuction.setDisable(true);
             auctionListController.loadMyAuction();
+            //auctionListController.setTitleController(this);
 
         }catch (Exception e) {
             e.printStackTrace();
@@ -126,5 +133,13 @@ public class TitleController {
 
     public void setAuctionListController(AuctionListController auctionListController) {
         this.auctionListController = auctionListController;
+    }
+
+    public JFXButton getMyAuction() {
+        return myAuction;
+    }
+
+    public JFXButton getFavoriteButton() {
+        return favoriteButton;
     }
 }

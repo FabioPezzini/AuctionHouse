@@ -128,46 +128,64 @@ public class CreateAuctionFormController {
 
     @FXML
     public void modifyAuction() throws RemoteException {
-        name = null;
-        price = -1;
+        if(!auction.isClosed()) {
+            name = null;
+            price = -1;
 
-        if( !itemName.getText().equals("") && !itemName.getText().equals(auction.getLot().getDescription())) {
-            name = itemName.getText();
+            if (!itemName.getText().equals("") && !itemName.getText().equals(auction.getLot().getDescription())) {
+                name = itemName.getText();
+            }
+            if (!basePrice.getText().equals("") && (Integer.parseInt(basePrice.getText()) > 0) && auction.getBidsList().size() == 0) {
+                price = Integer.parseInt(basePrice.getText());
+            }
+
+            client.modifyAuctio(name, price, auction.getId());
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Ottimo");
+            alert.setHeaderText("Modifiche effettuate con successo, RICARICA LA PAGINA PER VEDERE GLI AGGIORNAMENTI");
+            alert.initOwner(popUpStage);
+
+            alert.showAndWait();
         }
-        if(!basePrice.getText().equals("") && (Integer.parseInt(basePrice.getText())>0) && auction.getBidsList().size()==0) {
-            price = Integer.parseInt(basePrice.getText());
+        else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error ");
+            alert.setHeaderText("Asta gia' chiusa");
+            alert.initOwner(popUpStage);
+
+            alert.showAndWait();
         }
-
-        client.modifyAuctio(name,price,auction.getId());
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Ottimo");
-        alert.setHeaderText("Modifiche effettuate con successo, RICARICA LA PAGINA PER VEDERE GLI AGGIORNAMENTI");
-        alert.initOwner(popUpStage);
-
-        alert.showAndWait();
     }
 
     @FXML
     public void closeAuction() throws RemoteException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Delete Auction");
-        alert.setHeaderText("Are you sure want to delete this auction");
+        if(!auction.isClosed()) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Auction");
+            alert.setHeaderText("Are you sure want to delete this auction");
 
-        Optional<ButtonType> option = alert.showAndWait();
+            Optional<ButtonType> option = alert.showAndWait();
 
 
-        if (option.get() == null) {
+            if (option.get() == null) {
+            } else if (option.get() == ButtonType.OK) {
+                client.closeAuction(auction.getId());
+                popUpStage.close();
+                primaryStage.close();
+            } else if (option.get() == ButtonType.CANCEL) {
+                popUpStage.close();
+                primaryStage.close();
+            }
         }
-        else if (option.get() == ButtonType.OK) {
-            client.closeAuction(auction.getId());
-            popUpStage.close();
-            primaryStage.close();
-        } else if (option.get() == ButtonType.CANCEL) {
-            popUpStage.close();
-            primaryStage.close();
-        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error ");
+            alert.setHeaderText("Asta gia' chiusa");
+            alert.initOwner(popUpStage);
 
+            alert.showAndWait();
+        }
     }
 
 
