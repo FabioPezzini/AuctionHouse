@@ -49,19 +49,19 @@ public class Lot implements Serializable {
 
     public String getDescription() { return description; }
 
-    public String information() {
+    String information() {
         return "Name:" + description + "\t" + "Vendor: " + vendor + "\t" + "Base Price:" + basePrice + "\n";
     }
-    public String informationDB() {
+
+    String informationDB() {
         return "Name:" + description + "\t" + "Vendor: " + vendorDB.getUsername() + "\t" + "Base Price:" + basePrice + "\n";
     }
 
-
-    public String closedInformation() {
+    String closedInformation() {
         return "Name:" + description + "\t" + "Vendor: " + vendor + "\t" + "Base Price:" + basePrice + "\t\t" + "Winner:" + winner + "\n";
     }
 
-    public String closedInformationDB() {
+    String closedInformationDB() {
         return "Name:" + description + "\t" + "Vendor: " + vendorDB.getUsername() + "\t" + "Base Price:" + basePrice + "\t\t" + "Winner:" + valuateWinner() + "\n";
     }
 
@@ -88,7 +88,7 @@ public class Lot implements Serializable {
         this.vendor = vendor;
     }
 
-    public User getVendorDB() {
+    User getVendorDB() {
         return vendorDB;
     }
 
@@ -100,15 +100,15 @@ public class Lot implements Serializable {
         return winnerDB;
     }
 
-    public void setWinnerDB(User winnerDB) {
+    void setWinnerDB(User winnerDB) {
         this.winnerDB = winnerDB;
     }
 
-    public void setDescription(String description) {
+    void setDescription(String description) {
         this.description = description;
     }
 
-    public void setBasePrice(int basePrice) {
+    void setBasePrice(int basePrice) {
         this.basePrice = basePrice;
     }
 
@@ -120,6 +120,14 @@ public class Lot implements Serializable {
         this.auL = auL;
     }
 
+    String getUsernamenVendorDB(){
+        return this.vendorDB.getUsername();
+    }
+
+    String getEmailVendor(){
+        return this.vendorDB.getEmail();
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Auction)
@@ -127,6 +135,7 @@ public class Lot implements Serializable {
         else
             return false;
     }
+
 
     public Lot() {}
 

@@ -1,39 +1,31 @@
 package Client.Controller;
 
-import Client.Domain.ClientManager;
+import Client.Exceptions.ErrorInputDateException;
+import Client.Exceptions.RequiredInputException;
 import Server.Domain.Auction;
 import com.jfoenix.controls.*;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Optional;
 
-public class CreateAuctionFormController {
-    private ClientManager client;
-    private Stage popUpStage;
-    private Stage primaryStage;
+public class CreateAuctionFormController extends TemplateController {
     private  File selectedFile;
     private Auction auction;
+
+    @FXML
+    private AnchorPane windowsPane;
 
     @FXML
     private JFXTextField itemName;
@@ -65,111 +57,82 @@ public class CreateAuctionFormController {
 
 
     @FXML
-    private JFXListView listview;
+    private JFXListView<String> listview;
 
     @FXML
     private JFXButton createAuction;
 
     @FXML
-    public void loadImageAction(ActionEvent event) {
+    public void loadImageAction() {
         FileChooser fc = new FileChooser();
         selectedFile = fc.showOpenDialog(null);
-
-
         if (selectedFile != null) {
             String extension = selectedFile.getAbsolutePath().replaceAll("^[^.]*.", "");  //Regex per ricavare l'estensione
             if (extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg")) {
                 listview.getItems().add(selectedFile.getAbsolutePath());
             } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error File");
-                alert.setHeaderText("File is not valid! Only jpg and png are allowed");
-                alert.initOwner(popUpStage);
-
-                alert.showAndWait();
+                String title="Error File extension";
+                String header="Operation failed";
+                String message="File is not valid! Only jpg and png are allowed";
+                ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.ERROR);
+                selectedFile=null;
             }
         }
     }
 
     @FXML
-    public void createAuctionAction(ActionEvent event) throws RemoteException {
-        if(validateInput()) {
-            if(client.createAuctionGUI(name,price,close) == 1) {
+    public void createAuctionAction() throws RemoteException {
+        try{
+            validateInput();
+            try{
+                client.createAuctionGUI(name,price,close);
+
                 if(selectedFile != null) {
                     client.sendFile(selectedFile);
                 }
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Ottimo");
-                alert.setHeaderText("Asta Creata con successo");
-                alert.initOwner(popUpStage);
-
-                alert.showAndWait();
-
+                String title="Success";
+                String header="Auction added";
+                String message="Auction created successfully";
+                ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.INFORMATION);
                 backToHome();
             }
-            else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error Date");
-                alert.setHeaderText("La data inserita non e' valida, inserire una data successiva a quella attuale");
-                alert.initOwner(popUpStage);
-
-                alert.showAndWait();
+           catch(ErrorInputDateException e) {
+                e.show(popUpStage);
             }
         }
-        else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error Input");
-            alert.setHeaderText("I campi non posso essere nulli, eccetto descrizione ed immagine");
-            alert.initOwner(popUpStage);
-
-            alert.showAndWait();
+        catch(RequiredInputException e){
+            e.show(popUpStage);
         }
     }
 
     @FXML
     public void modifyAuction() throws RemoteException {
-        if(!auction.isClosed()) {
-            name = null;
-            price = -1;
+        name = null;
+        price = -1;
 
-            if (!itemName.getText().equals("") && !itemName.getText().equals(auction.getLot().getDescription())) {
-                name = itemName.getText();
-            }
-            if (!basePrice.getText().equals("") && (Integer.parseInt(basePrice.getText()) > 0) && auction.getBidsList().size() == 0) {
-                price = Integer.parseInt(basePrice.getText());
-            }
-
-            client.modifyAuctio(name, price, auction.getId());
-
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Ottimo");
-            alert.setHeaderText("Modifiche effettuate con successo, RICARICA LA PAGINA PER VEDERE GLI AGGIORNAMENTI");
-            alert.initOwner(popUpStage);
-
-            alert.showAndWait();
+        if( !itemName.getText().equals("") && !itemName.getText().equals(auction.getDescriptionLot())) {//protected variation
+            name = itemName.getText();
         }
-        else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error ");
-            alert.setHeaderText("Asta gia' chiusa");
-            alert.initOwner(popUpStage);
-
-            alert.showAndWait();
+        if(!basePrice.getText().equals("") && (Integer.parseInt(basePrice.getText())>0) && auction.getBidsList().size()==0) {
+            price = Integer.parseInt(basePrice.getText());
         }
+
+        client.modifyAuctio(name,price,auction.getId());
+
+        String title="Success";
+        String header="Done";
+        String message="Auction modified successfully. Refresh the page";
+        ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.INFORMATION);
+
     }
 
     @FXML
     public void closeAuction() throws RemoteException {
-        if(!auction.isClosed()) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Delete Auction");
-            alert.setHeaderText("Are you sure want to delete this auction");
-
-            Optional<ButtonType> option = alert.showAndWait();
-
-
-            if (option.get() == null) {
-            } else if (option.get() == ButtonType.OK) {
+        String title="Delete Auction";
+        String headerText="Are you sure want to delete this auction";
+        Optional<ButtonType> option =ControllerServices.getInstance().getSelectionFromAlert(title,headerText,"",new Alert(Alert.AlertType.CONFIRMATION));
+        if(option.isPresent()) {
+            if (option.get() == ButtonType.OK) {
                 client.closeAuction(auction.getId());
                 popUpStage.close();
                 primaryStage.close();
@@ -178,95 +141,73 @@ public class CreateAuctionFormController {
                 primaryStage.close();
             }
         }
-        else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error ");
-            alert.setHeaderText("Asta gia' chiusa");
-            alert.initOwner(popUpStage);
 
-            alert.showAndWait();
-        }
     }
 
 
     @FXML
-    public void handleCursorHand(MouseEvent me) {
-        primaryStage.getScene().setCursor(Cursor.HAND);
+    public void handleCursorHand() {
+        popUpStage.getScene().setCursor(Cursor.HAND);
     }
 
     @FXML
-    public void handleCursor(MouseEvent me) {
-        primaryStage.getScene().setCursor(Cursor.DEFAULT);
+    public void handleCursor() {
+        popUpStage.getScene().setCursor(Cursor.DEFAULT);
     }
 
 
 
-    public void setParameter() {
-        Image img;
-
-        if (auction.getImage() != null) {
-            try {
-                img = new Image(new FileInputStream(auction.getImage()), 100, 100, false, false);
-
-                imageView.setImage(img);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        else {
-            try {
-                File file = null;
-                try {
-                    URL res = getClass().getClassLoader().getResource("Images/i_have_no_idea.png");
-                    file = Paths.get(res.toURI()).toFile();
-                }catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-
-                String absolutePath = file.getAbsolutePath();
-                img = new Image(new FileInputStream(absolutePath), 100, 100, false, false);
-
-                imageView.setImage(img);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-
-        itemName.setText(auction.getLot().getDescription());
+    void setParameter() {
+        ControllerServices.getInstance().setImagetoTheAuction(auction,imageView);
+        itemName.setText(auction.getDescriptionLot());//protected var
         basePrice.setText(Integer.toString(auction.getHigherOffer()));
         closeDate.setVisible(false);
         closeTime.setVisible(false);
+        if(auction.getBidsList().size()!=0)
+            basePrice.setDisable(true);
     }
 
-    private boolean validateInput() {
-        if(itemName.getText().equals(""))
-            return false;
-        name = itemName.getText();
-        if(basePrice.getText().equals(""))
-            return false;
-        price = Integer.parseInt(basePrice.getText());
-        if(closeDate.getValue() == null)
-            return false;
-        if(closeTime.getValue() == null)
-            return false;
-        LocalDate date = closeDate.getValue();
-        LocalTime time = closeTime.getValue();
-        close = LocalDateTime.of(date,time);
-
-        return true;
+    private void validateInput() {
+        try {
+            if (itemName.getText().equals(""))
+                throw new RequiredInputException();
+            name = itemName.getText();
+            if (basePrice.getText().equals(""))
+                throw new RequiredInputException();
+            price = Integer.parseInt(basePrice.getText());
+            if (closeDate.getValue() == null)
+                throw new RequiredInputException();
+            if (closeTime.getValue() == null)
+                throw new RequiredInputException();
+            LocalDate date = closeDate.getValue();
+            LocalTime time = closeTime.getValue();
+            close = LocalDateTime.of(date, time);
+        }catch (NumberFormatException e) {
+            throw new RequiredInputException();
+        }
     }
 
-    public void disableModifyDeleteAuction() {
+    void disableModifyDeleteAuction() {
         modifyAuction.setDisable(true);
         modifyAuction.setVisible(false);
         deleteAuction.setDisable(true);
         deleteAuction.setVisible(false);
     }
 
-    public void disableCreateAuction() {
+    void disableCreateAuction() {
         createAuction.setDisable(true);
         createAuction.setVisible(false);
 
+    }
+
+    void initializeWindow() {
+        popUpStage.getScene().setFill(Color.TRANSPARENT);
+        windowsPane.setStyle(
+
+                "-fx-background-insets: 5; " +
+                        "-fx-background-radius: 10; " +
+                        "-fx-effect: dropshadow(three-pass-box, black, 10, 0, 0, 0);"
+        );
     }
 
     @FXML
@@ -276,18 +217,6 @@ public class CreateAuctionFormController {
         popUpStage.close();
     }
 
-    public void setClient(ClientManager client) {
-        this.client = client;
-    }
-
-    public void setPopUpStage(Stage popUpStage) {
-        this.popUpStage = popUpStage;
-    }
-
-    public void setPrimaryStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-    }
-
     public Auction getAuction() {
         return auction;
     }
@@ -295,4 +224,6 @@ public class CreateAuctionFormController {
     public void setAuction(Auction auction) {
         this.auction = auction;
     }
+
+
 }

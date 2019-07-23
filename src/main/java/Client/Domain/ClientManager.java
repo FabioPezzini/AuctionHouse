@@ -1,9 +1,13 @@
 package Client.Domain;
 
+import Client.Controller.ControllerServices;
+import Client.Exceptions.*;
+
 import Server.Domain.Auction;
 import Server.Domain.Proxy;
 import Server.People.Credentials.CharAnalizer;
 import Server.People.User;
+import javafx.scene.control.Alert;
 
 import java.io.File;
 import java.rmi.ConnectException;
@@ -11,6 +15,8 @@ import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ClientManager {
     private String loggedUser;
@@ -52,6 +58,7 @@ public class ClientManager {
             return false;
         } catch (ConnectException e) {
             System.out.println("The Remote server isn't responding... the application will shut down");
+            ControllerServices.getInstance().showAlert("Connection failed","","The Remote server isn't responding... the application will shut down",null, Alert.AlertType.ERROR);
             System.exit(1);
         }
         return false;
@@ -69,8 +76,8 @@ public class ClientManager {
             System.out.println("Enter your Password:");
             String pw = scan.nextLine();
             if (validatePassword(pw)) {
-                if (!ad.alredyTakenUsernameDB(uid)) {
-                    ad.createUserDB(uid, pw);
+                if (!ad.alredyTakenUsername(uid)) {
+                    ad.createUser(uid, pw);
                     System.out.println("Utente creato con successo: " + uid + "\t" + pw);
                 } else
                     System.out.println("Username gia' in uso, riprovare");
@@ -80,22 +87,27 @@ public class ClientManager {
         }
     }
 
-    public int signUpGUI(String username, String password) throws RemoteException {
+    public void signUpGUI(String username, String password,String email) throws RemoteException, UsernameTakenException, EmailInvalidException, EmailTakenException  {
         try {
-
-            if (validatePassword(password)) {
-                if (!ad.alredyTakenUsernameDB(username)) {
-                    ad.createUserDB(username, password);
-                    return 1; //Utente inserito con successo
-                } else
-                    return 0; //Username gia' in uso
-            } else
-                return -1; //Password non valida
+             if (validatePassword(password)) {
+                if (validateEmail(email)) {
+                    if (!ad.alredyTakenUsernameDB(username)) {
+                        if (!ad.alredyTakenEmailDB(email)) {
+                            ad.createUserDB(username, password, email);
+                            //Utente inserito con successo
+                        }else
+                            throw new EmailTakenException(); //Email gia' in uso
+                    } else
+                        throw new UsernameTakenException(); //Username gia' in uso
+                }else
+                    throw new EmailInvalidException(); //Email non valida
+            }else
+                throw new InvalidPasswordException(); //Password non valida
         } catch (ConnectException e) {
         System.out.println("The Remote server isn't responding... the application will shut down");
-        System.exit(1);
+            ControllerServices.getInstance().showAlert("Connection failed","","The Remote server isn't responding... the application will shut down",null, Alert.AlertType.ERROR);
+            System.exit(1);
     }
-        return -1;
 
     }
 
@@ -124,23 +136,22 @@ public class ClientManager {
         }
     }
 
-    public int loginGUI(String username, String password) throws RemoteException {
+    public void loginGUI(String username, String password) throws RemoteException {
         try {
             if (loggedUser == null) {
                 if (ad.checkLoginDB(username, password)) {
-                    loggedUser = username;
-                    return 1; //Login effettuato con successo
+                    loggedUser = username; //Login effettuato con successo
                 } else {
-                    return 0; //Dati inseriti errati
+                    throw new ErrorLoginException(); //Dati inseriti errati
                 }
             } else {
-                return -1; //Qualcuno e' gia' loggato
+                throw new AlreadyLoggedInException(); //Qualcuno e' gia' loggato
             }
         } catch (ConnectException e) {
             System.out.println("The Remote server isn't responding... the application will shut down");
+            ControllerServices.getInstance().showAlert("Connection failed","","The Remote server isn't responding... the application will shut down",null, Alert.AlertType.ERROR);
             System.exit(1);
         }
-        return -1;
     }
 
 
@@ -155,10 +166,16 @@ public class ClientManager {
      */
     private boolean validatePassword(String password) {
         CharAnalizer analizer = new CharAnalizer();
-        if(!analizer.validatePassword(password)) {
-            return false;
-        }
-        return true;
+        return analizer.validatePassword(password);
+    }
+
+    private boolean validateEmail(String email) {
+        String regex = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+
     }
 
     /**
@@ -189,19 +206,18 @@ public class ClientManager {
         }
     }
 
-    public int createAuctionGUI(String name,int basePrice,LocalDateTime close) throws RemoteException {
+    public void createAuctionGUI(String name,int basePrice,LocalDateTime close) throws RemoteException {
         try {
 
             if (!close.isBefore(ad.currentiTime()) && !close.isEqual(ad.currentiTime())) {
                 ad.addAuctionDB(name, basePrice, loggedUser, close);
-                return 1;
             } else
-                return 0;
+                throw new ErrorInputDateException();
         } catch (ConnectException e) {
             System.out.println("The Remote server isn't responding... the application will shut down");
+            ControllerServices.getInstance().showAlert("Connection failed","","The Remote server isn't responding... the application will shut down",null, Alert.AlertType.ERROR);
             System.exit(1);
         }
-        return 0;
     }
 
     public void modifyAuctio(String title,int price, int id) throws RemoteException {
@@ -246,14 +262,15 @@ public class ClientManager {
             System.out.println("L'id inserito non e' abbinato a nessun'asta esistente");
     }
 
-    public boolean makeBid(String user,int amout, int id) throws RemoteException{
+    public void makeBid(String user,int amout, int id) throws RemoteException{
         try {
-            return ad.makeBidDB(user,amout,id);
+            if(!ad.makeBidDB(user,amout,id))
+               throw new BidOfferException() ;
         } catch (ConnectException e) {
             System.out.println("The Remote server isn't responding... the application will shut down");
+            ControllerServices.getInstance().showAlert("Connection failed","","The Remote server isn't responding... the application will shut down",null, Alert.AlertType.ERROR);
             System.exit(1);
         }
-        return false;
     }
 
     /**
@@ -418,8 +435,38 @@ public class ClientManager {
         return ad.userLikeAuction(loggedUser,id);
     }
 
+    public void changeEmail(String email,String username) throws RemoteException{
+            if(validateEmail(email)) {
+                ad.changeEmail(email,username);
+            }
+            else
+                throw new  EmailInvalidException();
+    }
+    public void changePassword(String pswNew,String pswRep,String username) throws RemoteException {
+        if (pswNew.equals(pswRep)){
+            if (validatePassword(pswNew)) {
+                ad.changePassword(pswNew, username);
+            } else
+                throw new InvalidPasswordException();
+        }
+        else
+            throw new NotMatchingPasswordException();
+    }
+
+    public String getVendorEmail(String username) throws RemoteException{
+        return ad.getVendorEmail(username);
+    }
+
+    public String getActualWinner(int id) throws RemoteException{
+        return ad.getActualWinner(id);
+    }
     public ClientManager(ConnectionLayer c, Proxy bind) {
         connection = c;
         ad = bind;
+    }
+
+    public void checkActor(String username,int id) throws RemoteException{
+        if(ad.checkActor(username,id))
+            throw new BidOfferException();
     }
 }

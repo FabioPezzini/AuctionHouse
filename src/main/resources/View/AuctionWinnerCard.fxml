@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="windowsPane" prefHeight="400.0" prefWidth="350.0" style="-fx-background-color: #66bb6a;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.Controller.AuctionWinnerCardController">
+      <effect>
+          <DropShadow />
+      </effect>
+   <children>
+      <ImageView fx:id="auctionImage" fitHeight="90.0" fitWidth="91.0" layoutX="41.0" layoutY="51.0" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="auctionName" layoutX="146.0" layoutY="9.0" text="Label">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
+      <Label fx:id="vendorWinner" layoutX="184.0" layoutY="60.0" text="Vendor:" />
+      <Label fx:id="vendor" layoutX="248.0" layoutY="60.0" text="Label" textFill="WHITE" />
+      <Label layoutX="184.0" layoutY="88.0" text="Offer:" />
+      <Label fx:id="higherOffer" layoutX="248.0" layoutY="88.0" text="Label" textFill="WHITE" />
+      <Label fx:id="line1" alignment="TOP_LEFT" layoutX="17.0" layoutY="155.0" prefHeight="17.0" prefWidth="317.0" />
+      <Label fx:id="line2" layoutX="17.0" layoutY="172.0" prefHeight="17.0" prefWidth="317.0" />
+      <Label fx:id="line3" layoutX="17.0" layoutY="192.0" prefHeight="17.0" prefWidth="317.0" />
+      <Hyperlink fx:id="e_mail" alignment="CENTER" layoutX="28.0" layoutY="245.0" prefHeight="48.0" prefWidth="281.0" text="Hyperlink">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Hyperlink>
+      <FontAwesomeIconView fx:id="backButton" glyphName="ANGLE_LEFT" layoutX="16.0" layoutY="35.0" onMouseClicked="#backToLoginScreen" onMouseEntered="#handleCursorHand" onMouseExited="#handleCursor" size="25" wrappingWidth="23.0" />
+   </children>
+</AnchorPane>

@@ -1,26 +1,24 @@
 package Client.Controller;
 
-import Client.Domain.ClientManager;
+import Client.Exceptions.*;
 import com.jfoenix.controls.*;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
 
-public class SignUpController {
-    private ClientManager client;
-    private Stage popUpStage;
-    private Stage primaryStage;
+public class SignUpController extends TemplateController {
 
     @FXML
     private JFXTextField username;
+    
+    @FXML
+    private JFXTextField email;
 
     @FXML
     private JFXPasswordField password;
@@ -32,38 +30,28 @@ public class SignUpController {
     private AnchorPane windowsPane;
 
     @FXML
-    private void handleRegistration() throws RemoteException {
+    private void handleRegistration() throws RemoteException, UsernameTakenException, PasswordTakenException, EmailInvalidException, EmailTakenException {
+        try {
         String us = username.getText();
+        String emailText = email.getText();
         String pass = password.getText();
-
-        int esito = client.signUpGUI(us,pass);
-
-        if(esito == 1) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Information Dialog");
-            alert.setHeaderText(null);
-            alert.setContentText("User create successfully");
-            alert.initOwner(popUpStage);
-
-            alert.showAndWait();
+        client.signUpGUI(us,pass,emailText);
+        String title="Information Dialog";
+        String header="Welcome "+us+"!";
+        String message ="User created successfully";
+        ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.INFORMATION);
         }
-        if(esito == 0) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error SignUp");
-            alert.setHeaderText("Username alredy exists");
-            alert.initOwner(popUpStage);
-
-            alert.showAndWait();
-
+        catch (UsernameTakenException ute) {
+            ute.show(popUpStage);
         }
-        if(esito == -1) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Error SignUp");
-            alert.setHeaderText("Error ");
-            alert.setContentText("Use at least 1.....ELENCO PARAMETRI PASS");
-            alert.initOwner(popUpStage);
-
-            alert.showAndWait();
+        catch (InvalidPasswordException pte) {
+            pte.show(popUpStage);
+        }
+        catch (EmailInvalidException eie){
+            eie.show(popUpStage);
+        }
+        catch (EmailTakenException ete) {
+            ete.show(popUpStage);
         }
     }
 
@@ -87,23 +75,7 @@ public class SignUpController {
     }
 
 
-    public void setPopUpStage(Stage popUpStage) {
-        this.popUpStage = popUpStage;
-    }
-
-    public Stage getPrimaryStage() { return primaryStage; }
-
-    public void setPrimaryStage(Stage primaryStage) { this.primaryStage = primaryStage; }
-
-    public ClientManager getClient() {
-        return client;
-    }
-
-    public void setClient(ClientManager client) {
-        this.client = client;
-    }
-
-    public void initializeWindow() {
+    void initializeWindow() {
         popUpStage.getScene().setFill(Color.TRANSPARENT);
         windowsPane.setStyle(
 

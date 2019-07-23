@@ -46,25 +46,24 @@ public class Auction implements Serializable {
     private File image;
 
     /**
-     * Aggiunge offerta all'asta
+     * Add bid to the auction
      */
     public void addBid(Bid bid) {
-        bidsList.add(bid);
-        higherOffer = bid.getAmount();
+        if(bid.getAmount()>higherOffer) {
+            bidsList.add(bid);
+            higherOffer = bid.getAmount();
+        }
     }
 
     public void addBidDB(Bid bid) {
         if(bid != null) {
-            if(bidsList == null) {
-                bidsList = new ArrayList<>();
-            }
             bidsList.add(bid);
             bid.setAu(this);
         }
     }
 
     /**
-     * Stampa informazioni su asta aperta
+     * Print info of if the auction is open
      */
     public String auctionInformation() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -79,9 +78,9 @@ public class Auction implements Serializable {
     }
 
     /**
-     * Stampa informazioni su asta chiusa
+     * Print info of if the auction is closed
      */
-    public String closedAuctionInformation() {
+    String closedAuctionInformation() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         closingDate.format(formatter);
         return "Id:"+ id + "\t" + "Current value:" + higherOffer + "\t" + lot.closedInformation() + "\n";
@@ -94,7 +93,7 @@ public class Auction implements Serializable {
     }
 
     /**
-     * Ottiene l'attuale offerta piu' alta
+     * Return the latest bid
      */
     public Bid getLastBid() {
         if(bidsList.size() != 0) {
@@ -166,10 +165,64 @@ public class Auction implements Serializable {
 
     public Auction() {}
 
+    public String getVendor(){
+        return this.lot.getVendor();
+    }
+    public User getVendorDB(){
+        return this.lot.getVendorDB();
+    }
+    
+
+    public String getLastActor(){
+        if (!bidsList.isEmpty())
+            return this.getLastBid().getActor();
+        else
+            return "";
+    }
+
+    public int getLastBidAmount(){
+        return this.getLastBid().getAmount();
+    }
+
+    public String getDescriptionLot(){
+        return this.lot.getDescription();
+    }
+
+    public void setDescriptionLot(String title){
+         this.lot.setDescription(title);
+    }
+    public void setBasePriceLot(int price){
+         this.lot.setBasePrice(price);
+    }
+    public String getUsernameVendorDB(){
+        //protected variations
+        return this.lot.getUsernamenVendorDB();
+        //Lot chiede a User di restituire la stringa username
+    }
+
+    public String getEmailVendor(){
+        return this.lot.getEmailVendor();
+    }
+
+
+    public void setWinner(String winner){
+        this.lot.setWinner(winner);
+    }
+    public void setWinnerDB(User winner){
+        this.lot.setWinnerDB(winner);
+    }
+
+    public String getWinner(){
+        return this.lot.getWinner();
+    }
     public Auction(Lot lot, LocalDateTime closingDate) {
         this.lot = lot;
         this.closingDate = closingDate;
         this.higherOffer=lot.getBasePrice();
+        this.bidsList=new ArrayList<>();
+    }
+    public int getLastBidID(){
+       return this.getLastBid().getId();
     }
 
     public Auction(int id, Lot lot, LocalDateTime closingDate) {
@@ -178,5 +231,6 @@ public class Auction implements Serializable {
         this.closingDate = closingDate;
         this.lot=lot;
         this.higherOffer=lot.getBasePrice();
+        this.bidsList=new ArrayList<>();
     }
 }

@@ -8,7 +8,7 @@ import java.rmi.RemoteException;
 public class ClientTextualApplication {
     public static void main(String[] args) throws RemoteException {
 
-        ConnectionLayer connection = new ConnectionLayer("hii");
+        ConnectionLayer connection = new ConnectionLayer("progettok19");
 
         while (!connection.isConnected()) { //FINCHE NON E' CONNESSO ASPETTA A CREARE IL CLIENT
         }

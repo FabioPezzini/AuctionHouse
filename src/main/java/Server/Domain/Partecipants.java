@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "PARTECIPANTS")
-public class Partecipants {
+public class Partecipants  {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "idPartecip", updatable = false, nullable = false)

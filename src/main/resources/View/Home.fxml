@@ -9,9 +9,9 @@
    <children>
       <AnchorPane fx:id="header" prefHeight="87.0" prefWidth="700.0" />
       <AnchorPane fx:id="auctionList" layoutY="102.0" prefHeight="400.0" prefWidth="525.0" />
-      <JFXButton fx:id="createAu" onMouseEntered="#handleCursorHand" onMouseExited="#handleCursor" layoutX="550.0" layoutY="349.0" onAction="#createAuctionAction" prefHeight="30.0" prefWidth="136.0" style="-fx-background-radius: 100; -fx-background-color: #FFFFFF;" text="Create Auction" textFill="#63ac64" />
-      <FontAwesomeIconView fill="WHITE" onMouseEntered="#handleCursorHand" onMouseExited="#handleCursor" glyphName="REFRESH" layoutX="550.0" layoutY="112.0" onMouseClicked="#reloadLatestAuction" size="30.0" text="" />
+      <JFXButton fx:id="createAu" layoutX="550.0" layoutY="349.0" onAction="#createAuctionAction" onMouseEntered="#handleCursorHand" onMouseExited="#handleCursor" prefHeight="30.0" prefWidth="136.0" style="-fx-background-radius: 100; -fx-background-color: #FFFFFF;" text="Create Auction" textFill="#63ac64" />
+      <FontAwesomeIconView fx:id="reloadButton" fill="WHITE" glyphName="REFRESH" layoutX="550.0" layoutY="112.0" onMouseClicked="#reloadCurrentTab" onMouseEntered="#handleCursorHand" onMouseExited="#handleCursor" size="30.0" text="" />
       <JFXTextField fx:id="searchText" layoutX="551.0" layoutY="168.0" promptText="Search..." />
-      <JFXButton fx:id="search" onMouseEntered="#handleCursorHand" onMouseExited="#handleCursor" layoutX="550.0" layoutY="209.0" onAction="#searchAuction" prefHeight="30.0" prefWidth="136.0" style="-fx-background-radius: 100; -fx-background-color: #FFFFFF;" text="Search Auction" textFill="#63ac64" />
+      <JFXButton fx:id="search" layoutX="550.0" layoutY="209.0" onAction="#searchAuction" onMouseEntered="#handleCursorHand" onMouseExited="#handleCursor" prefHeight="30.0" prefWidth="136.0" style="-fx-background-radius: 100; -fx-background-color: #FFFFFF;" text="Search Auction" textFill="#63ac64" />
    </children>
 </AnchorPane>

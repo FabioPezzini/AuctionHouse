@@ -12,6 +12,7 @@ drop TABLE IF EXISTS AUCTION;
 CREATE TABLE USER
 ( username CHAR(20),
   pass CHAR(40),
+  email VARCHAR(254),
   loggedstatus BOOLEAN,
   PRIMARY KEY(username));
 

@@ -1,6 +1,11 @@
 package Server.Domain;
 
 import Server.People.User;
+import Server.Services.AuctionService;
+import Server.Services.HibernateUtil;
+import Server.Services.LoginService;
+import Server.Services.SignUpService;
+import org.hibernate.SessionFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -28,16 +33,22 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
     private int auctionIdCounter = 1; //Valido per FileManager, il valore non e' salvato
     private transient Timer timer;
     private FileManager files;
-    private InterpreterRDB db;
     private Registry reg = null;
+    private DBConnection db;
+
 
 
     public void createUser(String username, String password){
-        User user = new User(username,password);
+        User user = new User(username,password,"");
         addUser(user);
     }
-    public void createUserDB (String username, String password){
-        db.addUser(username,password);
+
+    public void createUserDB (String username, String password,String email){ db.addUser(username,password,email); }
+    public void changeEmail(String email,String username){
+        db.changeEmail(email,username);
+    }
+    public void changePassword(String psw,String username){
+        db.changePassword(psw,username);
     }
 
 
@@ -65,32 +76,37 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
     }
     public boolean alredyTakenUsernameDB(String username) { return db.alredyTakenUsername(username); }
 
+    public boolean alredyTakenEmailDB(String email) { return db.alredyTakenEmail(email); }
+
+
 
     public String showAllActiveAuctions() {
-        String toPrint = "";
+        StringBuilder toPrint2=new StringBuilder();
         for (Map.Entry<Integer,Auction> entry : auctionList.entrySet()) {
             Auction entryValue = entry.getValue();
-            toPrint =  toPrint + entryValue.auctionInformation();
+            toPrint2.append(entryValue.closedAuctionInformation());
         }
         if(auctionList.isEmpty()) {
-            toPrint = "Nessun Inserzione Esistente" + "\n";
+            return  "Nessun Inserzione Esistente" + "\n";
         }
-        return toPrint;
+        return toPrint2.toString();
     }
+
     public String showAllActiveAuctionsDB() { return db.showAllActive(); }
 
 
     public String showClosedAuctions() {
-        String toPrint = "";
+        StringBuilder toPrint2=new StringBuilder();
         for (Map.Entry<Integer,Auction> entry : closedAuction.entrySet()) {
             Auction entryValue = entry.getValue();
-            toPrint =  toPrint + entryValue.closedAuctionInformation();
+            toPrint2.append(entryValue.closedAuctionInformation());
         }
         if(closedAuction.isEmpty()) {
-            toPrint = "Nessun Inserzione Chiusa" + "\n";
+            return  "Nessun Inserzione Chiusa" + "\n";
         }
-        return toPrint;
+        return toPrint2.toString();
     }
+
     public String showClosedAuctionsDB() { return db.showAllClosed(); }
 
 
@@ -109,13 +125,12 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
         auctionList.put(auctionIdCounter,au);
         // Timer for ending the auction
         createTimer(closingTime);
-
         auctionIdCounter++;
     }
 
     public synchronized void addAuctionDB(String title, int price, String vendor, LocalDateTime closingTime) {
         db.addAuction(title,price,vendor,closingTime);
-        int auctionId = db.idOfAuction();
+        int auctionId = db.latestId();
         ZonedDateTime zdt = closingTime.atZone(ZoneId.of("Europe/Rome"));
         long millis = zdt.toInstant().toEpochMilli();
         AuctionDBTimerStrategy t = new AuctionDBTimerStrategy(db.getAuction(auctionId),millis);
@@ -130,6 +145,19 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
 
     public synchronized void closeAuction(int id) {
         db.closeAuction(id);
+    }
+
+    public void closeActiveAuction(int id){
+        Auction auction=auctionList.get(id);
+        if(!auction.isClosed()){
+            auction.setClosed(true);
+            if (!auction.getBidsList().isEmpty()){
+                auction.setWinner(auction.getLastActor());
+            }
+            else{
+                auction.setWinner("No winner");
+            }
+        }
     }
 
     public boolean isClosed(int id) { return db.isClosed(id);}
@@ -149,7 +177,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
         if(userToCheck != null) {
             if(userToCheck.isLoggedIn())
                 return false;
-            if (userToCheck.checkPassword(pass)) {
+            if (userToCheck.checkPassword2(pass)) {
                 userToCheck.setLoggedIn(true);
                 return true;
             }
@@ -161,13 +189,9 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
     public boolean checkLoginDB(String username,String pass) { return db.login(username,pass); }
 
 
-    private User userListed(String username) {
-        if(usersList.containsKey(username))
-            return usersList.get(username);
-        else
-            return null;
+    User userListed(String username) {
+        return usersList.getOrDefault(username,null);
     }
-
 
     public boolean checkExistingAuction (int idAuction) {
         return (auctionList.containsKey(idAuction));
@@ -181,26 +205,27 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
         else
             return -1;
     }
-    public int higherOfferDB(int id) { return db.higherOffer(id); }
+    public int higherOfferDB(int id) { return db.highestOffer(id); }
 
 
     public boolean vendorOfAuction(int idAuction,String logged) {
-        return (auctionListed(idAuction).getLot().getVendor().equalsIgnoreCase(logged));
+        //protected variation
+        return (auctionListed(idAuction).getVendor().equalsIgnoreCase(logged));
+        //Auction chiede a Lot di restituirgli la stringa del venditore
     }
     public boolean vendorOfAuctionDB(int idAuction,String logged) { return db.vendorOfAuction(idAuction,logged); }
 
 
     private Auction auctionListed(int idAuction) {
-        if(auctionList.containsKey(idAuction))
-            return auctionList.get(idAuction);
-        else
-            return null;
+        return auctionList.getOrDefault(idAuction,null);
     }
 
     public synchronized void makeBid(String user, int amount,int id){
         Bid bid = new Bid(id,user,amount);
         Auction request = auctionListed(id);
-        request.addBid(bid);
+        if (request.getBidsList().isEmpty() || !request.getLastActor().equals(user)) {
+                    request.addBid(bid);
+        }
     }
     public synchronized boolean makeBidDB(String user, int amount,int id) { return db.makeBid(user,amount,id); }
 
@@ -209,8 +234,8 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
     }
 
     public synchronized void saveAuctionImage(File image) {
-        auctionIdCounter = db.idOfAuction();
-        String pathSave = "src\\main\\resources\\AuctionImages\\" + auctionIdCounter + ".png";
+        auctionIdCounter = db.latestId();
+        String pathSave = "src\\main\\resources\\Images\\" + auctionIdCounter + ".png";
 
         try {
             BufferedImage bi = ImageIO.read(image);
@@ -227,14 +252,19 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
     }
 
     public void refreshTimerStats() {
-        HashMap<Integer, BigInteger> timerValue = new HashMap<>();
+        HashMap<Integer, BigInteger> timerValue;
         timerValue = db.reloadTimer();
 
         for (Map.Entry<Integer, BigInteger> entry : timerValue.entrySet()) {
-            AuctionDBTimerStrategy t = new AuctionDBTimerStrategy(db.getAuction(entry.getKey()),entry.getValue().longValue());
-            t.passArgument(timerTasksDB,db);
-            timer.schedule(t, (entry.getValue().longValue() - System.currentTimeMillis()));
-            timerTasksDB.add(t);
+            AuctionDBTimerStrategy t = new AuctionDBTimerStrategy(db.getAuction(entry.getKey()), entry.getValue().longValue());
+            t.passArgument(timerTasksDB, db);
+            if (entry.getValue().longValue() - System.currentTimeMillis() > 0) {
+                timer.schedule(t, (entry.getValue().longValue() - System.currentTimeMillis()));
+                timerTasksDB.add(t);
+            }
+            else {
+                t.run();
+            }
         }
 
         for(Map.Entry<Integer, BigInteger> entry : timerValue.entrySet()) {
@@ -244,30 +274,15 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
             System.out.println(value);
         }
 
-
-
-
-        for(Map.Entry<Integer, BigInteger> entry : timerValue.entrySet()) {
-                // Reschedule task to initial value subtracted how much has already elapsed
-                AuctionDBTimerStrategy timerT = new AuctionDBTimerStrategy(entry.getKey(),entry.getValue().longValue());
-                timerT.passArgument(timerTasksDB,db);
-                Timer timer = new Timer();
-                long timeLeft = timerT.getTimeLeft();
-                if(timeLeft < 0) {
-                   timerT.run();
-                }
-                else {
-                    timer.schedule(timerT, timeLeft);
-                }
-
-            }
         db.deleteTimer();
     }
 
     public void closeServer() throws RemoteException {
         try {
             saveTimerStats();
-            db.getSessionFactory().close();
+            //protected variations
+            db.closeSession();
+            //Facade interagisce con InterpreterRDB per chiudere Session Factory
             reg.unbind("progettok19");
             UnicastRemoteObject.unexportObject(this,true);
 
@@ -278,13 +293,13 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
     }
 
     public void init() throws RemoteException {
-        reg = LocateRegistry.createRegistry(999);
-
+        reg = LocateRegistry.createRegistry(1002);
         reg.rebind("progettok19", this);
+        db.logoutAll();
     }
 
     public void reloadImages() {
-        setAuctionIdCounter(db.idOfAuction());
+        setAuctionIdCounter(db.latestId());
     }
 
     public ArrayList<Auction> myAuctionList(String username) { return db.myAuctionList(username); }
@@ -301,9 +316,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
         return db.AuctionList();
     }
 
-    public ArrayList<Auction> searchAuctionList(String textToSearch) {
-        return db.searchAuctionList(textToSearch);
-    }
+    public ArrayList<Auction> searchAuctionList(String textToSearch) { return db.searchAuctionList(textToSearch); }
 
     public Auction getAuction(int id) { return db.getAuction(id);}
 
@@ -311,9 +324,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
         return db.getUser(username);
     }
 
-    public void saveUserStateDB(User user,Auction au,int choose) {
-        db.saveUserStateFavorites(user,au,choose);
-    }
+    public void saveUserStateDB(User user,Auction au,int choose) { db.saveUserStateFavorites(user,au,choose); }
 
     public void saveAuctionStateDB(Auction auction) {
         db.saveAuctionState(auction);
@@ -331,19 +342,19 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
 
     public ConcurrentHashMap<String, User> getUsersList() { return usersList; }
 
-    public void setUsersList(ConcurrentHashMap<String, User> usersList) { this.usersList = usersList; }
+    void setUsersList(ConcurrentHashMap<String, User> usersList) { this.usersList = usersList; }
 
     public ConcurrentHashMap<Integer, Auction> getAuctionList() { return auctionList; }
 
-    public void setAuctionList(ConcurrentHashMap<Integer, Auction> auctionList) { this.auctionList = auctionList; }
+    void setAuctionList(ConcurrentHashMap<Integer, Auction> auctionList) { this.auctionList = auctionList; }
 
-    public HashMap<Integer, Auction> getClosedAuction() { return closedAuction; }
+    HashMap<Integer, Auction> getClosedAuction() { return closedAuction; }
 
-    public void setClosedAuction(HashMap<Integer, Auction> closedAuction) { this.closedAuction = closedAuction; }
+    void setClosedAuction(HashMap<Integer, Auction> closedAuction) { this.closedAuction = closedAuction; }
 
-    public HashMap<AuctionTimerStrategy, Long> getTimerTasks() { return timerTasks; }
+    HashMap<AuctionTimerStrategy, Long> getTimerTasks() { return timerTasks; }
 
-    public void setTimerTasks(HashMap<AuctionTimerStrategy, Long> timerTasks) { this.timerTasks = timerTasks; }
+    void setTimerTasks(HashMap<AuctionTimerStrategy, Long> timerTasks) { this.timerTasks = timerTasks; }
 
     public ArrayList<AuctionDBTimerStrategy> getTimerTasksDB() {
         return timerTasksDB;
@@ -355,7 +366,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
 
     public int getAuctionIdCounter() { return auctionIdCounter; }
 
-    public void setAuctionIdCounter(int auctionIdCounter) { this.auctionIdCounter = auctionIdCounter; }
+    private void setAuctionIdCounter(int auctionIdCounter) { this.auctionIdCounter = auctionIdCounter; }
 
     public Timer getTimer() { return timer; }
 
@@ -365,9 +376,15 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
 
     public void setFiles(FileManager files) { this.files = files; }
 
-    public InterpreterRDB getDb() { return db; }
+    public String getVendorEmail(String username){ return db.getVendorEmail(username); }
 
-    public void setDb(InterpreterRDB db) { this.db = db; }
+    public boolean checkActor(String username,int id){
+        return db.checkActor(username,id);
+    }
+    public String getActualWinner(int id){
+        return db.getActualWinner( id);
+    }
+
 
     public FacadeServer() throws RemoteException {
         usersList = new ConcurrentHashMap<>();
@@ -376,7 +393,8 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
         timer = new Timer();
         timerTasks = new HashMap<>();
         files = new FileManager(this);
-        db = new InterpreterRDB(this);
         timerTasksDB = new ArrayList<>();
+        db = new DBConnection();
+
     }
 }

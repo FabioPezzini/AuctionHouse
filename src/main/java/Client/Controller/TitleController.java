@@ -1,31 +1,23 @@
 package Client.Controller;
 
-import Client.Domain.ClientManager;
 import animatefx.animation.*;
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 
-public class TitleController {
-    private ClientManager client;
-    private Stage primaryStage;
+public class TitleController extends TemplateController {
 
     @FXML
     private JFXButton logout;
-
-    @FXML
-    private JFXButton userSection;
 
     @FXML
     private JFXButton myAuction;
@@ -33,7 +25,14 @@ public class TitleController {
     @FXML
     private JFXButton favoriteButton;
 
+    @FXML
+    private JFXButton userButton;
+
     private AuctionListController auctionListController;
+
+    private UserPageController userPageController;
+
+    private HomeController homeController;
 
     @FXML
     public void handleCursorHand(MouseEvent me) {
@@ -59,27 +58,28 @@ public class TitleController {
                 ((LoginController) loader.getController()).setPrimaryStage(primaryStage);
                 ((LoginController) loader.getController()).setClient(client);
             } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error Logout");
-                alert.setHeaderText("Some error occured, contact your administrator");
-
-                alert.showAndWait();
+                String title="Error Logout";
+                String header="Error";
+                String message="Some error occured, contact your administrator";
+                ControllerServices.getInstance().showAlert(title,header,message,primaryStage, Alert.AlertType.ERROR);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-
+    @FXML
+    public  void reloadHomeAuction() {
+        homeController.reloadLatestAuction();
+    }
 
     @FXML
-    private void viewFavorites() {
+    public void viewFavorites() {
         try {
             setVisibleButtons();
 
-            auctionListController.loadFavorite();
-            //auctionListController.setTitleController(this);
             new BounceOut(favoriteButton).play();
+            auctionListController.loadFavorite();
             favoriteButton.setDisable(true);
 
         }catch (Exception e) {
@@ -88,14 +88,13 @@ public class TitleController {
     }
 
     @FXML
-    private void myAuction () {
+    public void viewMyAuction () {
         try {
             setVisibleButtons();
 
             new BounceOut(myAuction).play();
-            myAuction.setDisable(true);
             auctionListController.loadMyAuction();
-            //auctionListController.setTitleController(this);
+            myAuction.setDisable(true);
 
         }catch (Exception e) {
             e.printStackTrace();
@@ -103,43 +102,60 @@ public class TitleController {
 
     }
 
+    @FXML
+    private void viewUser() throws IOException {
+        try {
+            setVisibleButtons();
+
+            new BounceOut(userButton).play();
+            userButton.setDisable(true);
+
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        BoxBlur blur = new BoxBlur(5,5,5);
+
+        Stage popUpStageUserPage = loadScenePopUp("/View/UserPage.fxml");
+
+        primaryStage.getScene().lookup("#windowsPane").setEffect(blur);
+
+
+        userPageController =loader.getController();
+        userPageController.setPrimaryStage(primaryStage);
+        userPageController.setClient(client);
+        userPageController.setPopUpStage(popUpStageUserPage);
+        userPageController.initializeWindow();
+        userPageController.initializeNow();
+        userPageController.setTitleController(this);
+
+    }
+
     public void setVisibleButtons() {
         new BounceIn(favoriteButton).play();
         favoriteButton.setDisable(false);
 
-        new BounceIn(userSection).play();
-        userSection.setDisable(false);
+        new BounceIn(userButton).play();
+        userButton.setDisable(false);
 
         new BounceIn(myAuction).play();
         myAuction.setDisable(false);
     }
 
 
-    public ClientManager getClient() { return client; }
-
-    public void setClient(ClientManager client) { this.client = client; }
-
-    public Stage getPrimaryStage() {
-        return primaryStage;
-    }
-
-    public void setPrimaryStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-    }
-
     public AuctionListController getAuctionListController() {
         return auctionListController;
     }
 
-    public void setAuctionListController(AuctionListController auctionListController) {
-        this.auctionListController = auctionListController;
-    }
+    public void setAuctionListController(AuctionListController auctionListController) { this.auctionListController = auctionListController; }
+    
 
-    public JFXButton getMyAuction() {
-        return myAuction;
-    }
+    public JFXButton getMyAuction() { return myAuction; }
 
-    public JFXButton getFavoriteButton() {
-        return favoriteButton;
-    }
+    public JFXButton getFavoriteButton() { return favoriteButton; }
+
+    public HomeController getHomeController() { return homeController; }
+
+    public void setHomeController(HomeController homeController) { this.homeController = homeController; }
 }

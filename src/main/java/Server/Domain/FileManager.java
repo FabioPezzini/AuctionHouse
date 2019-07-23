@@ -8,18 +8,17 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class FileManager {
+class FileManager {
     private FacadeServer s;
-    private static final String USERS_FILE = "utenti.bin";
-    private static final String AUCTION_FILE = "auctions.bin";
-    private static final String TIMERS_FILE = "timers.bin";
-    private static final String CLOSED_AUCTION = "closedAuction.bin";
+    private static final String USERS_FILE = "./src/main/resources/StoreFiles/utenti.bin";
+    private static final String AUCTION_FILE = "./src/main/resources/StoreFiles/auctions.bin";
+    private static final String TIMERS_FILE = "./src/main/resources/StoreFiles/timers.bin";
+    private static final String CLOSED_AUCTION = "./src/main/resources/StoreFiles/closedAuction.bin";
 
     /**
-     * Metodo usato per salvare lo stato del Server prima della chiusura di quest'ultimo
-     *
+     * Used from the Textual Application (not DB) to save the Server's state
      */
-    public String saveState()  {
+    String saveState()  {
         String result = "";
         try {
             ObjectOutputStream o = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(AUCTION_FILE)));
@@ -43,16 +42,14 @@ public class FileManager {
     }
 
     /**
-     * Metodo usato per caricare lo stato del Server, si consiglia di farlo prima dell'apertura
-     * @return
+     * Used from the Textual Application (not DB) to load the Server's state
      */
-    public String loadState() {
+    String loadState() {
         String result = "";
         loadAuction();
         loadUser();
         loadTimer();
         loadClosedAuction();
-
         reloadTimer();
 
         result = "Auction state restored from: " + AUCTION_FILE + "\nUsers state restored from: " + USERS_FILE;
@@ -97,9 +94,9 @@ public class FileManager {
     }
 
     /**
-     * Metodo usato per riSchedulare i timer una volta che viene effettuato il caricamento dello stato
+     * Used from the Textual Application (not DB) to re-load the timers
      */
-    public void reloadTimer() {
+    private void reloadTimer() {
         Timer timer = new Timer();
         for (Map.Entry<AuctionTimerStrategy, Long> t: s.getTimerTasks().entrySet()) {
             // Reschedule task to initial value subtracted how much has already elapsed
@@ -114,7 +111,7 @@ public class FileManager {
         }
     }
 
-    public FileManager(FacadeServer s) {
+    FileManager(FacadeServer s) {
         this.s = s;
     }
 }

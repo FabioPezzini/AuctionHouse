@@ -43,11 +43,9 @@ public class ConnectionLayer {
      */
     private void connect() {
             try {
-                Registry reg = LocateRegistry.getRegistry("localhost",999);
+                Registry reg = LocateRegistry.getRegistry("localhost",1002);
                 server = (Proxy) reg.lookup(connectionStr);
-
                 setConnected(true);
-
             } catch (NotBoundException e) {
                 System.err.println("Unable to bind the server - " + e);
             } catch (RemoteException e) {
